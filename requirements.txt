@@ -1,0 +1,5 @@
+django
+pillow
+mysqlclient
+ python manage.py createsuperuser   
+ 
