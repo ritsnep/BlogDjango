@@ -1,11 +1,11 @@
 {% extends 'core/base.html' %}
 {% block title %}
-{{category.title}} |
+All Articles |
 {% endblock %}
 {% block content %}
 
 <style>
-    .category-container {
+    .all-articles-container {
         max-width: 900px;
         margin: 2rem auto;
         padding: 0 1rem;
@@ -124,6 +124,43 @@
         justify-content: space-between;
     }
 
+    /* Pagination */
+    .pagination {
+        display: flex;
+        justify-content: center;
+        gap: 0.5rem;
+        margin-top: 3rem;
+        padding: 2rem 0;
+    }
+
+    .pagination a,
+    .pagination span {
+        padding: 0.6rem 1rem;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        text-decoration: none;
+        color: #333;
+        font-weight: 500;
+        transition: all 0.3s;
+    }
+
+    .pagination a:hover {
+        background: #3273dc;
+        color: white;
+        border-color: #3273dc;
+    }
+
+    .pagination .current {
+        background: #3273dc;
+        color: white;
+        border-color: #3273dc;
+    }
+
+    .pagination .disabled {
+        color: #ccc;
+        cursor: not-allowed;
+    }
+
     .empty-state {
         text-align: center;
         padding: 3rem 1rem;
@@ -154,11 +191,11 @@
     }
 </style>
 
-<div class="category-container">
+<div class="all-articles-container">
     <!-- Page Header -->
     <div class="page-header">
-        <h1>{{ category.title }}</h1>
-        <p>Showing {{ posts|length }} article{{ posts|length|pluralize }}</p>
+        <h1>{{ section_title }}</h1>
+        <p>Showing {{ total_count }} articles</p>
     </div>
 
     <!-- Articles List -->
@@ -202,10 +239,39 @@
         {% endfor %}
     </div>
 
+    <!-- Pagination -->
+    {% if posts.has_other_pages %}
+    <div class="pagination">
+        {% if posts.has_previous %}
+            <a href="?page=1">« First</a>
+            <a href="?page={{ posts.previous_page_number }}">‹ Previous</a>
+        {% else %}
+            <span class="disabled">« First</span>
+            <span class="disabled">‹ Previous</span>
+        {% endif %}
+
+        {% for num in posts.paginator.page_range %}
+            {% if posts.number == num %}
+                <span class="current">{{ num }}</span>
+            {% else %}
+                <a href="?page={{ num }}">{{ num }}</a>
+            {% endif %}
+        {% endfor %}
+
+        {% if posts.has_next %}
+            <a href="?page={{ posts.next_page_number }}">Next ›</a>
+            <a href="?page={{ posts.paginator.num_pages }}">Last »</a>
+        {% else %}
+            <span class="disabled">Next ›</span>
+            <span class="disabled">Last »</span>
+        {% endif %}
+    </div>
+    {% endif %}
+
     {% else %}
     <!-- Empty State -->
     <div class="empty-state">
-        <p>There are no posts in this category.</p>
+        <p>No articles found.</p>
         <a href="/" style="color: #3273dc; text-decoration: none; font-weight: 500;">Return to Home</a>
     </div>
     {% endif %}

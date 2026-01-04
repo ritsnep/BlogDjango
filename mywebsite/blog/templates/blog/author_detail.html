@@ -1,0 +1,146 @@
+{% extends 'core/base.html' %}
+{% block title %}{{ author.get_full_name|default:author.username }} - Profile | {% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <div class="columns">
+
+            <!-- Left Sidebar -->
+            <div class="column is-3-desktop is-4-tablet">
+                <div class="author-sidebar has-text-centered p-4" style="background: #fff;">
+                    <!-- Profile Image with 'Staff' Badge approximation -->
+                    <div class="position-relative mb-4" style="position: relative; display: inline-block; width: 100%;">
+                        <figure class="image is-square"
+                            style="border-radius: 8px; overflow: hidden; border: 1px solid #ddd;">
+                            <img src="{{ author.userprofile.get_image_url }}" alt="{{ author.username }}"
+                                style="object-fit: cover;">
+                        </figure>
+                        {% if author.userprofile.role %}
+                        <span class="tag is-info"
+                            style="position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); border-radius: 12px; padding: 0 1rem; font-weight: 600; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">
+                            {{ author.userprofile.role }}
+                        </span>
+                        {% endif %}
+                    </div>
+
+                    <h1 class="title is-3 mb-5" style="font-weight: 800; line-height: 1.2;">
+                        {{ author.get_full_name|default:author.username }}
+                    </h1>
+
+                    {% if author.email %}
+                    <a href="mailto:{{ author.email }}" class="button is-dark is-fullwidth mb-5"
+                        style="background-color: #222; font-weight: 600;">
+                        Email
+                    </a>
+                    {% endif %}
+
+                    <!-- Social Media Large Icons -->
+                    <div class="buttons is-centered are-medium">
+                        {% if author.userprofile.linkedin_url %}
+                        <a href="{{ author.userprofile.linkedin_url }}" target="_blank"
+                            class="button is-white has-text-link">
+                            <span class="icon is-large"><i class="fa fa-linkedin fa-2x"></i></span>
+                        </a>
+                        {% endif %}
+                        {% if author.userprofile.twitter_url %}
+                        <a href="{{ author.userprofile.twitter_url }}" target="_blank"
+                            class="button is-white has-text-info">
+                            <span class="icon is-large"><i class="fa fa-twitter fa-2x"></i></span>
+                        </a>
+                        {% endif %}
+                        {% if author.userprofile.website_url %}
+                        <a href="{{ author.userprofile.website_url }}" target="_blank"
+                            class="button is-white has-text-grey">
+                            <span class="icon is-large"><i class="fa fa-globe fa-2x"></i></span>
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Content -->
+            <div class="column is-9-desktop is-8-tablet pl-6-desktop">
+
+                <!-- About Section (Using BIO only) -->
+                <section class="mb-6">
+                    <h2 class="title is-2 mb-4" style="font-weight: 800;">About {{ author.get_full_name|default:author.username }}</h2>
+                    <div class="content is-medium" style="color: #444; line-height: 1.8;">
+                        {{ author.userprofile.bio|linebreaks }}
+                    </div>
+                </section>
+
+                <hr style="background-color: #eee; height: 1px; margin: 3rem 0;">
+
+                <!-- Latest Articles List -->
+                <section>
+                    <h3 class="title is-4 mb-5" style="font-weight: 800;">{{ author.get_full_name|default:author.username }}'s latest articles</h3>
+
+                    <div class="articles-list">
+                        {% for post in posts %}
+                        <article class="media mb-6" style="border-bottom: 1px solid #f5f5f5; padding-bottom: 2rem;">
+                            <figure class="media-left">
+                                <p class="image is-128x128" style="overflow: hidden; border-radius: 4px;">
+                                    <a href="{% url 'post_detail' post.category.slug post.slug %}">
+                                        {% if post.image %}
+                                        <img src="{{ post.get_image_url }}" alt="{{ post.title }}"
+                                            style="object-fit: cover; height: 100%;">
+                                        {% else %}
+                                        <div
+                                            style="background: #eee; height: 100%; display: flex; align-items: center; justify-content: center; color: #999;">
+                                            img</div>
+                                        {% endif %}
+                                    </a>
+                                </p>
+                            </figure>
+                            <div class="media-content">
+                                <div class="content">
+                                    <p class="mb-1">
+                                        <span class="has-text-grey is-uppercase is-size-7"
+                                            style="font-weight: 600; letter-spacing: 0.5px;">{{ post.category.title }}</span>
+                                    </p>
+                                    <h4 class="title is-4 mb-2">
+                                        <a href="{% url 'post_detail' post.category.slug post.slug %}"
+                                            style="color: #000; text-decoration: none;">
+                                            {{ post.title }}
+                                        </a>
+                                    </h4>
+                                    <p class="mb-2" style="color: #555;">
+                                        {{ post.intro|truncatewords:20 }}
+                                    </p>
+                                    <p class="is-size-7 has-text-grey">
+                                        <span style="color: #666;">{{ author.get_full_name|default:author.username }}</span> | {{ post.created_at|date:"M d, Y" }} at {{ post.created_at|date:"g:i a" }}
+                                    </p>
+                                </div>
+                            </div>
+                        </article>
+                        {% empty %}
+                        <div class="notification is-light">
+                            No articles found for this author.
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Pagination -->
+                    {% if posts.paginator.num_pages > 1 %}
+                    <nav class="pagination is-centered mt-5" role="navigation" aria-label="pagination">
+                        {% if posts.has_previous %}
+                        <a href="?page={{ posts.previous_page_number }}" class="pagination-previous">Previous</a>
+                        {% endif %}
+                        {% if posts.has_next %}
+                        <a href="?page={{ posts.next_page_number }}" class="pagination-next">Next page</a>
+                        {% endif %}
+                    </nav>
+                    {% endif %}
+                </section>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+
+
+
+
+

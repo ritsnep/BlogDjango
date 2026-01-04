@@ -3,54 +3,1036 @@
 {{post.title}} |
 {% endblock %}
 {% block content %}
-<section class="hero">
-    <div class="hero-body">
-        <div class="container">
-            <section class="section">
-                {% if post.image %}
-                <figure class="image mb-6">
-                    <img src="{{post.image.url}}">
-                </figure>
-                {% endif %}
-                <div class="columns">
-                    <div class="column is-8 is-offset-2">
 
-                        <div class="content is-medium">
-                           
-                            <h2 class="subtitle is-4"> {{post.created_at|date:'m/d/y h:i'}}</h2>
-                            <h2 class="subtitle is-7"> {{post.created_at|timesince}} ago</h2>
-                            <h1 class="title">{{post.title}}</h1>
-                            <p><strong>{{post.intro}}</strong></p>
-                            <p>{{post.body}}</p>
-                            <p><small>Category: <a href="{% url 'category_detail' post.category.slug %}">{{post.category}}</a></small>
-                            </p>
-                            <hr>
-                            <h2 class="subtitle is-4">Comments</h2>
-                            <form method="post" class="mb-6">
-                                {% csrf_token %}
-                                {{form.as_p}}
-                                <div class="field">
-                                    <div class="control">
-                                        <button class="button is-sucess"> Submit Comment</button>
-                                    </div>
-                                </div>
-                            </form>
-                            {%for comment in post.comments.all %}
-                            <article class="media box">
-                                <div class="media-content">
-                                    <strong>{{comment.name}}</strong><small> {{comment.created_at|timesince}}
-                                        ago</small><br>
-                                    {{comment.body}}
-                            </article>
-                            {%endfor%}
-                        </div>
-                        </a>
+<style>
+    .detail-header {
+        background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+        padding: 3rem 2rem;
+        margin-bottom: 3rem;
+        border-radius: 0;
+        text-align: center;
+    }
 
-                    </div>
+    .breadcrumb-nav {
+        font-size: 0.85rem;
+        color: #666;
+        margin-bottom: 1.5rem;
+        letter-spacing: 0.5px;
+    }
 
-                </div>
-            </section>
+    .breadcrumb-nav a {
+        color: #666;
+        text-decoration: none;
+        font-weight: 500;
+    }
+
+    .breadcrumb-nav a:hover {
+        color: #3273dc;
+    }
+
+    .post-title-section h1 {
+        font-size: 2.5rem;
+        line-height: 1.2;
+        margin: 1rem 0;
+        color: #222;
+        font-weight: 700;
+        max-width: 900px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .post-meta {
+        font-size: 0.9rem;
+        color: #666;
+        display: flex;
+        gap: 2.5rem;
+        margin-top: 1.5rem;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .meta-item {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        white-space: nowrap;
+    }
+
+    .meta-item span:first-child {
+        font-size: 1.1em;
+    }
+
+    .meta-item a {
+        color: #3273dc;
+        text-decoration: none;
+        font-weight: 500;
+    }
+
+    .meta-item a:hover {
+        text-decoration: underline;
+    }
+
+    .main-container {
+        display: grid;
+        grid-template-columns: 280px 1fr 280px;
+        gap: 2rem;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .left-sidebar {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+        position: sticky;
+        top: 20px;
+    }
+
+    .share-section {
+        background: white;
+        padding: 1rem 0.75rem;
+        border-radius: 4px;
+        box-shadow: none;
+        text-align: left;
+        border-bottom: 1px solid #eee;
+    }
+
+    .share-section {
+        background: transparent;
+        padding: 1rem 0;
+        border-bottom: 1px solid #eee;
+        margin-bottom: 1rem;
+    }
+
+    .share-section h3 {
+        font-size: 1rem;
+        font-weight: 800;
+        color: #222;
+        margin-bottom: 1rem;
+    }
+
+    .share-buttons {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .share-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        border-radius: 4px;
+        color: #3273dc;
+        background: #eef4ff;
+        font-size: 0.9rem;
+        transition: all 0.3s;
+    }
+
+    .share-btn:hover {
+        background: #3273dc;
+        color: white;
+        transform: translateY(-2px);
+    }
+
+    .share-reddit {
+        background: #ff450015;
+        color: #ff4500;
+    }
+
+    .share-reddit:hover {
+        background: #ff4500;
+        color: white;
+    }
+
+    .author-section {
+        padding: 1.5rem 0;
+        border-bottom: 1px solid #eee;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .author-image {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+    .author-info h4 {
+        font-size: 0.9rem;
+        color: #444;
+        margin: 0;
+    }
+
+    .author-info p {
+        font-size: 0.9rem;
+        font-weight: 500;
+        margin: 0;
+    }
+    }
+
+    .article-content {
+        background: white;
+        padding: 2rem;
+        border-radius: 4px;
+    }
+
+    .article-content img {
+        max-width: 100%;
+        height: auto;
+        margin: 1.5rem 0;
+        border-radius: 4px;
+    }
+
+    .article-content p {
+        font-size: 1rem;
+        line-height: 1.7;
+        color: #444;
+        margin-bottom: 1.5rem;
+    }
+
+    .article-content h2 {
+        font-size: 1.6rem;
+        font-weight: bold;
+        margin: 2rem 0 1rem 0;
+        color: #222;
+    }
+
+    .article-content h3 {
+        font-size: 1.3rem;
+        font-weight: bold;
+        margin: 1.5rem 0 0.8rem 0;
+        color: #333;
+    }
+
+    .article-content ul,
+    .article-content ol {
+        margin-left: 2rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .article-content li {
+        margin-bottom: 0.5rem;
+        color: #444;
+    }
+
+    .article-content strong {
+        font-weight: bold;
+        color: #222;
+    }
+
+    .article-content em {
+        font-style: italic;
+        color: #555;
+    }
+
+    .article-content a {
+        color: #3273dc;
+        text-decoration: none;
+        font-weight: 500;
+    }
+
+    .article-content a:hover {
+        text-decoration: underline;
+    }
+
+    .article-body {
+        white-space: normal;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        font-size: 1rem;
+        line-height: 1.8;
+        color: #444;
+    }
+
+    .article-body p {
+        margin-bottom: 1.5rem;
+        line-height: 1.8;
+        text-align: justify;
+    }
+
+    .article-body br {
+        display: block;
+        margin: 0.5rem 0;
+    }
+
+    .toc-section {
+        padding: 1.5rem 0;
+        border-bottom: none;
+    }
+
+    .toc-header {
+        font-size: 1.2rem;
+        font-weight: 800;
+        color: #222;
+        margin-bottom: 1rem;
+    }
+
+    .toc-content {
+        display: block;
+    }
+
+    .toc-content ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .toc-content li {
+        margin-bottom: 1rem;
+        position: relative;
+        padding-left: 1rem;
+    }
+
+    .toc-content li::before {
+        content: "";
+        width: 5px;
+        height: 5px;
+        background: #ccc;
+        border-radius: 50%;
+        position: absolute;
+        left: 0;
+        top: 0.6rem;
+    }
+
+    .toc-content a {
+        color: #666;
+        text-decoration: none;
+        font-size: 1rem;
+        line-height: 1.4;
+        transition: color 0.3s;
+    }
+
+    .toc-content a:hover {
+        color: #3273dc;
+    }
+
+
+
+    .article-body h2,
+    .article-body h3,
+    .article-body h4,
+    .article-body h5,
+    .article-body h6 {
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+        font-weight: 700;
+        color: #222;
+    }
+
+    .article-body h2 {
+        font-size: 1.6rem;
+        border-bottom: 2px solid #3273dc;
+        padding-bottom: 0.5rem;
+    }
+
+    .article-body h3 {
+        font-size: 1.3rem;
+        color: #333;
+    }
+
+    .article-body h4 {
+        font-size: 1.1rem;
+    }
+
+    .article-body ul,
+    .article-body ol {
+        margin-left: 2rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .article-body li {
+        margin-bottom: 0.7rem;
+        line-height: 1.6;
+        color: #444;
+    }
+
+    .article-body blockquote {
+        border-left: 4px solid #3273dc;
+        padding-left: 1.5rem;
+        margin: 1.5rem 0;
+        color: #666;
+        font-style: italic;
+        background: #f8f9fa;
+        padding: 1rem 1rem 1rem 1.5rem;
+        border-radius: 4px;
+    }
+
+    .article-body code {
+        background: #f5f5f5;
+        padding: 0.2rem 0.5rem;
+        border-radius: 3px;
+        font-family: 'Courier New', monospace;
+        color: #c7254e;
+    }
+
+    .article-body pre {
+        background: #2c3e50;
+        color: #ecf0f1;
+        padding: 1rem;
+        border-radius: 4px;
+        overflow-x: auto;
+        margin-bottom: 1.5rem;
+    }
+
+    .article-body pre code {
+        background: none;
+        color: #ecf0f1;
+        padding: 0;
+    }
+
+    .article-body strong {
+        font-weight: 700;
+        color: #222;
+    }
+
+    .article-body em {
+        font-style: italic;
+    }
+
+    .article-body a {
+        color: #3273dc;
+        text-decoration: none;
+        font-weight: 500;
+    }
+
+    .article-body a:hover {
+        text-decoration: underline;
+    }
+
+    .article-body img {
+        max-width: 100%;
+        height: auto;
+        margin: 1.5rem 0;
+        border-radius: 4px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .article-body table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 1.5rem 0;
+    }
+
+    .article-body table th {
+        background: #3273dc;
+        color: white;
+        padding: 1rem;
+        text-align: left;
+        font-weight: 700;
+    }
+
+    .article-body table td {
+        border: 1px solid #ddd;
+        padding: 0.8rem 1rem;
+    }
+
+    .article-body table tr:nth-child(even) {
+        background: #f8f9fa;
+    }
+
+    .sidebar {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+    .sidebar-box {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 4px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    .sidebar-title {
+        font-size: 0.9rem;
+        font-weight: bold;
+        text-transform: uppercase;
+        color: #666;
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid #f0f0f0;
+    }
+
+    .newsletter-form {
+        display: flex;
+        flex-direction: column;
+        gap: 0.8rem;
+    }
+
+    .newsletter-form input {
+        padding: 0.7rem;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 0.9rem;
+    }
+
+    .newsletter-form button {
+        padding: 0.7rem;
+        background: #3273dc;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+
+    .newsletter-form button:hover {
+        background: #2365c0;
+    }
+
+    .category-tag {
+        display: inline-block;
+        background: #f0f0f0;
+        color: #666;
+        padding: 0.4rem 0.8rem;
+        border-radius: 3px;
+        font-size: 0.85rem;
+        margin-bottom: 1rem;
+        font-weight: 600;
+    }
+
+    .comments-section {
+        margin-top: 3rem;
+        padding-top: 2rem;
+        border-top: 2px solid #f0f0f0;
+    }
+
+    .comments-section h2 {
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+        font-weight: bold;
+    }
+
+    .comment-form {
+        background: #f9f9f9;
+        padding: 1.5rem;
+        border-radius: 4px;
+        margin-bottom: 2rem;
+    }
+
+    .comment-form label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 0.3rem;
+        color: #333;
+    }
+
+    .comment-form p {
+        margin-bottom: 1rem;
+    }
+
+    .comment-form input,
+    .comment-form textarea {
+        width: 100%;
+        padding: 0.7rem;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 0.95rem;
+        font-family: inherit;
+        box-sizing: border-box;
+    }
+
+    .comment-form textarea {
+        min-height: 120px;
+        resize: vertical;
+    }
+
+    .comment-form button {
+        background: #3273dc;
+        color: white;
+        padding: 0.8rem 1.5rem;
+        border: none;
+        border-radius: 4px;
+        font-weight: bold;
+        cursor: pointer;
+        font-size: 0.95rem;
+        transition: background 0.3s;
+    }
+
+    .comment-form button:hover {
+        background: #2365c0;
+    }
+
+    .comments-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .comment-item {
+        padding: 1rem;
+        background: #f9f9f9;
+        border-left: 4px solid #3273dc;
+        border-radius: 4px;
+    }
+
+    .comment-author {
+        font-weight: bold;
+        color: #222;
+    }
+
+    .comment-date {
+        font-size: 0.85rem;
+        color: #999;
+        margin-left: 0.5rem;
+    }
+
+    .comment-text {
+        margin-top: 0.5rem;
+        color: #555;
+        line-height: 1.6;
+    }
+
+    .related-posts {
+        margin-top: 3rem;
+        padding-top: 2rem;
+        border-top: 2px solid #f0f0f0;
+    }
+
+    .related-posts h2 {
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+        font-weight: bold;
+    }
+
+    .related-posts-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
+    }
+
+    .related-post-item {
+        background: #f9f9f9;
+        border-radius: 4px;
+        overflow: hidden;
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .related-post-item:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .related-post-image {
+        width: 100%;
+        height: 180px;
+        overflow: hidden;
+        background: #e0e0e0;
+    }
+
+    .related-post-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .related-post-content {
+        padding: 1rem;
+    }
+
+    .related-post-title {
+        font-size: 0.95rem;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        line-height: 1.3;
+        color: #222;
+    }
+
+    .related-post-meta {
+        font-size: 0.8rem;
+        color: #999;
+    }
+
+    .related-post-item a {
+        color: inherit;
+        text-decoration: none;
+    }
+
+    .related-post-item:hover .related-post-title {
+        color: #3273dc;
+    }
+
+    /* Ensure embedded content is responsive globaly */
+    iframe,
+    video,
+    embed,
+    object {
+        max-width: 100%;
+    }
+
+    @media (max-width: 768px) {
+
+        /* Prevent horizontal scroll on mobile */
+        html,
+        body {
+            overflow-x: hidden;
+            width: 100%;
+        }
+
+        .main-container {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            padding: 0 1.5rem;
+            box-sizing: border-box;
+        }
+
+
+        .left-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+            position: static;
+        }
+
+
+        .post-title-section h1 {
+            font-size: 1.6rem;
+        }
+
+        .related-posts-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .post-meta {
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .article-content {
+            padding: 1rem;
+        }
+
+        .share-section {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            padding-bottom: 1rem;
+            gap: 0.5rem;
+        }
+
+        .share-section h3 {
+            margin-bottom: 0;
+            width: 100%;
+        }
+
+        .share-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            width: 100%;
+            justify-content: flex-start;
+        }
+
+
+
+
+        .share-btn {
+            width: 32px;
+            height: 32px;
+            font-size: 0.85rem;
+        }
+
+        .toc-content {
+            max-height: 250px;
+        }
+    }
+</style>
+
+<div class="detail-header">
+    <div class="breadcrumb-nav">
+        <a href="/">Home</a> •
+        <a href="{% url 'category_detail' post.category.slug %}">{{ post.category.title }}</a> •
+        <span>Article</span>
+    </div>
+    <div class="post-title-section">
+        <h1>{{ post.title }}</h1>
+        <div class="post-meta">
+            <span class="meta-item">
+                <span>Published:</span> {{ post.created_at|date:"F d, Y \a\t g:i A" }}
+            </span>
+            <span class="meta-item">
+                <span>Read Time:</span> {{ read_time }} minute{{ read_time|pluralize }}
+            </span>
         </div>
     </div>
-</section>
+</div>
+
+<div class="main-container">
+    <!-- Left Sidebar: Share & Author -->
+    <div class="left-sidebar">
+        <!-- Share Section -->
+        <div class="share-section">
+            <h3>Share</h3>
+            <div class="share-buttons">
+                <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}" target="_blank"
+                    class="share-btn share-facebook" title="Share on Facebook">
+                    <i class="fa fa-facebook"></i>
+                </a>
+                <a href="https://twitter.com/intent/tweet?url={{ request.build_absolute_uri }}&text={{ post.title }}"
+                    target="_blank" class="share-btn share-twitter" title="Share on X">
+                    <i class="fa fa-close"></i>
+                </a>
+                <a href="mailto:?subject={{ post.title }}&body={{ request.build_absolute_uri }}"
+                    class="share-btn share-email" title="Share via Email">
+                    <i class="fa fa-envelope"></i>
+                </a>
+                <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ request.build_absolute_uri }}"
+                    target="_blank" class="share-btn share-linkedin" title="Share on LinkedIn">
+                    <i class="fa fa-linkedin"></i>
+                </a>
+                <a href="https://www.reddit.com/submit?url={{ request.build_absolute_uri }}&title={{ post.title }}"
+                    target="_blank" class="share-btn share-reddit" title="Share on Reddit">
+                    <i class="fa fa-reddit"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- Author Section (Sidebar) -->
+        <div class="author-section"
+            style="display: flex; align-items: center; gap: 10px; padding: 1rem 0; border-bottom: 1px solid #eee;">
+            {% if post.author.userprofile.profile_image %}
+            <img src="{{ post.author.userprofile.profile_image.url }}" alt="{{ post.author.username }}"
+                style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;">
+            {% else %}
+            <img src="https://ui-avatars.com/api/?name={% if post.author %}{{ post.author.username }}{% else %}Admin{% endif %}&background=0D8ABC&color=fff"
+                alt="Author" style="width: 40px; height: 40px; border-radius: 50%;">
+            {% endif %}
+
+            <div style="line-height: 1.2;">
+                <span style="color: #666; font-size: 0.9rem;">Written by</span>
+                <a href="{% url 'author_detail' post.author.username %}"
+                    style="color: #3273dc; font-weight: 600; text-decoration: none;">
+                    {% if post.author %}
+                    {{ post.author.get_full_name|default:post.author.username }}
+                    {% else %}
+                    Ritesh Nepali
+                    {% endif %}
+                </a>
+            </div>
+        </div>
+
+
+        <!-- Table of Contents Section -->
+        <div class="toc-section">
+            <div class="toc-header">
+                Table of Contents
+            </div>
+            <div class="toc-content" id="toc-content">
+                <ul id="toc-list"></ul>
+            </div>
+        </div>
+
+
+    </div>
+
+    <div>
+        <!-- Featured Image -->
+        {% if post.image %}
+        <div style="margin-bottom: 2rem;">
+            <img src="{{ post.get_image_url }}" alt="{{ post.title }}" style="width: 100%; border-radius: 4px;">
+        </div>
+        {% endif %}
+
+        <!-- Article Content -->
+        <div class="article-content">
+            <div class="category-tag">{{ post.category.title }}</div>
+
+            <p><strong>{{ post.intro }}</strong></p>
+
+            <div class="article-body">
+                {{ post.body|linebreaks }}
+            </div>
+
+            <!-- Author Bio Box (Matching Image) -->
+            {% if post.author.userprofile %}
+            <div class="mt-6 pt-5" style="border-top: 1px solid #eee;">
+
+                <!-- Header with Title and Social Icons -->
+                <div class="is-flex is-justify-content-space-between is-align-items-center mb-4">
+                    <h3 style="font-size: 1.5rem; font-weight: 800; color: #000; margin: 0;">About the Author</h3>
+                    <div class="social-icons" style="display: flex; gap: 8px;">
+                        {% if post.author.userprofile.twitter_url %}
+                        <a href="{{ post.author.userprofile.twitter_url }}" target="_blank"
+                            style="width: 30px; height: 30px; background: #eef4ff; color: #1da1f2; display: flex; align-items: center; justify-content: center; border-radius: 4px; text-decoration: none;">
+                            <i class="fa fa-twitter"></i>
+                        </a>
+                        {% endif %}
+                        {% if post.author.userprofile.linkedin_url %}
+                        <a href="{{ post.author.userprofile.linkedin_url }}" target="_blank"
+                            style="width: 30px; height: 30px; background: #eef4ff; color: #0077b5; display: flex; align-items: center; justify-content: center; border-radius: 4px; text-decoration: none;">
+                            <i class="fa fa-linkedin"></i>
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Bio Card -->
+                <div class="box"
+                    style="padding: 0; overflow: hidden; border: 1px solid #ddd; box-shadow: none; border-radius: 6px;">
+                    <div class="columns is-gapless mb-0">
+                        <!-- Image Column -->
+                        <div class="column is-narrow">
+                            <figure class="image" style="width: 150px; height: 100%;">
+                                {% if post.author.userprofile.profile_image %}
+                                <img src="{{ post.author.userprofile.profile_image.url }}"
+                                    alt="{{ post.author.username }}"
+                                    style="height: 100%; width: 100%; object-fit: cover;">
+                                {% else %}
+                                <img src="https://ui-avatars.com/api/?name={{ post.author.username }}&background=0D8ABC&color=fff"
+                                    style="height: 100%; width: 100%; object-fit: cover;">
+                                {% endif %}
+                            </figure>
+                        </div>
+
+                        <!-- Content Column -->
+                        <div class="column">
+                            <div class="content p-4">
+                                <h4 style="margin: 0 0 0.5rem 0; color: #222; font-weight: 700;">{{ post.author.get_full_name|default:post.author.username }}</h4>
+
+
+
+                                <p style="font-size: 0.95rem; line-height: 1.5; color: #333;">
+                                    {{ post.author.userprofile.bio }}
+                                </p>
+                                <a href="{% url 'author_detail' post.author.username %}"
+                                    style="font-size: 0.9rem; color: #3273dc;">... [Read more]</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Related Posts Section -->
+            {% if related_posts %}
+            <div class="related-posts">
+                <h2>Related Articles</h2>
+                <div class="related-posts-grid">
+                    {% for related_post in related_posts %}
+                    <a href="{% url 'post_detail' related_post.category.slug related_post.slug %}"
+                        class="related-post-item">
+                        <div class="related-post-image">
+                            {% if related_post.image %}
+                            <img src="{{ related_post.get_image_url }}" alt="{{ related_post.title }}">
+                            {% else %}
+                            <div
+                                style="width: 100%; height: 100%; background: #e0e0e0; display: flex; align-items: center; justify-content: center;">
+                                <span style="color: #999;">No Image</span>
+                            </div>
+                            {% endif %}
+                        </div>
+                        <div class="related-post-content">
+                            <div class="related-post-title">{{ related_post.title }}</div>
+                            <div class="related-post-meta">{{ related_post.created_at|date:"M d, Y" }}</div>
+                        </div>
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Comments Section -->
+            <div class="comments-section">
+                <h2>Comments ({{ post.comments.count }})</h2>
+
+                <!-- Comment Form -->
+                <div class="comment-form">
+                    <form method="post">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <button type="submit">Submit Comment</button>
+                    </form>
+                </div>
+
+                <!-- Existing Comments -->
+                {% if post.comments.all %}
+                <div class="comments-list">
+                    {% for comment in post.comments.all %}
+                    <div class="comment-item">
+                        <div>
+                            <span class="comment-author">{{ comment.name }}</span>
+                            <span class="comment-date">{{ comment.created_at|timesince }} ago</span>
+                        </div>
+                        <div class="comment-text">{{ comment.body }}</div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p style="color: #999; text-align: center; padding: 2rem 0;">No comments yet. Be the first to
+                    comment!</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <!-- Newsletter Signup -->
+        <div class="sidebar-box">
+            <div class="sidebar-title">Latest News And Insights</div>
+            <p style="font-size: 0.9rem; color: #666; margin-bottom: 1rem;">Delivered To Your Inbox</p>
+            <p style="font-size: 0.85rem; color: #999; margin-bottom: 1rem;">Get your daily rundown of the latest
+                search news, advice, and trends.</p>
+            <form class="newsletter-form">
+                <input type="email" placeholder="Enter your email here" required>
+                <button type="submit">Sign me up!</button>
+            </form>
+        </div>
+
+        <!-- Category Info (Optional) -->
+        <div class="sidebar-box">
+            <div class="sidebar-title">Category</div>
+            <p style="color: #666; margin: 0;">
+                <strong><a href="{% url 'category_detail' category.slug %}"
+                        style="color: #3273dc; text-decoration: none;">{{ category.title }}</a></strong>
+            </p>
+            <p style="font-size: 0.9rem; color: #999; margin-top: 0.5rem;">{{ category.posts.count }} articles</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    function generateTableOfContents() {
+        const tocList = document.getElementById('toc-list');
+        const articleBody = document.querySelector('.article-body');
+
+        if (!articleBody) return;
+
+        // We target H2 and H3 as most common titles
+        const headings = articleBody.querySelectorAll('h2, h3');
+        let html = '';
+
+        headings.forEach((heading, index) => {
+            // Create ID if not exists
+            if (!heading.id) {
+                heading.id = `section-${index}`;
+            }
+
+            const level = parseInt(heading.tagName[1]);
+            const title = heading.textContent;
+            const className = level === 3 ? 'toc-level-3' : '';
+
+            html += `<li class="${className}"><a href="#${heading.id}">${title}</a></li>`;
+        });
+
+        if (html) {
+            tocList.innerHTML = html;
+            document.querySelector('.toc-section').style.display = 'block';
+        } else {
+            document.querySelector('.toc-section').style.display = 'none';
+        }
+    }
+
+    // Generate TOC when page loads
+    document.addEventListener('DOMContentLoaded', generateTableOfContents);
+</script>
+
 {% endblock %}

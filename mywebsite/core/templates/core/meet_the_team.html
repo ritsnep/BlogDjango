@@ -1,0 +1,301 @@
+{% extends 'core/base.html' %}
+{% block title %}Meet The Team | {% endblock %}
+
+{% block content %}
+<style>
+    :root {
+        --primary-color: #3273dc;
+        --secondary-color: #2c3e50;
+        --card-bg: #ffffff;
+        --text-main: #2c3e50;
+        --text-muted: #95a5a6;
+    }
+
+    .team-hero {
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        padding: 5rem 1.5rem;
+        text-align: center;
+        margin-bottom: 4rem;
+    }
+
+    .team-hero h1 {
+        font-size: 3rem;
+        font-weight: 800;
+        color: var(--secondary-color);
+        margin-bottom: 1rem;
+        letter-spacing: -1px;
+    }
+
+    .team-hero p {
+        font-size: 1.25rem;
+        color: #576574;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .role-section {
+        margin-bottom: 5rem;
+    }
+
+    .role-title-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 3rem;
+        position: relative;
+    }
+
+    .role-title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--secondary-color);
+        background: #fff;
+        padding: 0 1.5rem;
+        z-index: 1;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .role-title-wrapper::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 50%;
+        width: 100%;
+        height: 1px;
+        background: #e0e0e0;
+        z-index: 0;
+    }
+
+    /* Grid Layout - Responsive */
+    .team-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 2.5rem;
+        padding: 0 1rem;
+    }
+
+    /* The Card */
+    .team-card {
+        background: var(--card-bg);
+        border-radius: 16px;
+        overflow: hidden;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        /* Soft shadow */
+        position: relative;
+        border: 1px solid rgba(0, 0, 0, 0.03);
+    }
+
+    .team-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 40px rgba(50, 115, 220, 0.15);
+        /* Blue tinted shadow */
+    }
+
+    .card-banner {
+        height: 100px;
+        background: linear-gradient(to right, #4facfe 0%, #00f2fe 100%);
+        opacity: 0.8;
+    }
+
+    /* Role specific banners */
+    .banner-author {
+        background: linear-gradient(to right, #43e97b 0%, #38f9d7 100%);
+    }
+
+    .banner-editor {
+        background: linear-gradient(to right, #fa709a 0%, #fee140 100%);
+    }
+
+    .banner-writer {
+        background: linear-gradient(to right, #667eea 0%, #764ba2 100%);
+    }
+
+    .banner-seo {
+        background: linear-gradient(to right, #89f7fe 0%, #66a6ff 100%);
+    }
+
+    .card-avatar-wrapper {
+        width: 120px;
+        height: 120px;
+        margin: -60px auto 1rem;
+        position: relative;
+        padding: 5px;
+        background: #fff;
+        border-radius: 50%;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-avatar {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+    .card-body {
+        text-align: center;
+        padding: 0 2rem 2rem;
+    }
+
+    .member-name {
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: var(--secondary-color);
+        margin-bottom: 0.25rem;
+    }
+
+    .member-role {
+        display: inline-block;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: var(--primary-color);
+        background: rgba(50, 115, 220, 0.1);
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        margin-bottom: 1rem;
+    }
+
+    .member-bio {
+        font-size: 0.95rem;
+        color: #7f8c8d;
+        line-height: 1.6;
+        margin-bottom: 1.5rem;
+        min-height: 3rem;
+        /* Align cards somewhat */
+    }
+
+    .social-links {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        margin-top: auto;
+    }
+
+    .social-btn {
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        color: #fff;
+    }
+
+    .social-btn i {
+        font-size: 1rem;
+    }
+
+    .social-linkedin {
+        background: #0077b5;
+        box-shadow: 0 4px 10px rgba(0, 119, 181, 0.3);
+    }
+
+    .social-twitter {
+        background: #1da1f2;
+        box-shadow: 0 4px 10px rgba(29, 161, 242, 0.3);
+    }
+
+    .social-website {
+        background: #333;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    .social-btn:hover {
+        transform: translateY(-3px) scale(1.1);
+        filter: brightness(1.1);
+    }
+
+    /* Mobile Responsiveness */
+    @media (max-width: 768px) {
+        .team-hero {
+            padding: 3rem 1rem;
+        }
+
+        .team-hero h1 {
+            font-size: 2.2rem;
+        }
+
+        .team-grid {
+            grid-template-columns: 1fr;
+            /* Single column on mobile */
+            gap: 2rem;
+        }
+
+        .role-title {
+            font-size: 1.5rem;
+        }
+    }
+</style>
+
+<!-- Hero Section -->
+<div class="team-hero">
+    <div class="container">
+        <h1>Meet Our Experts</h1>
+        <p>The talented voices and minds behind the insights you trust.</p>
+    </div>
+</div>
+
+<div class="container pb-6">
+    {% for role_name, members in role_groups %}
+    {% if members %}
+    <div class="role-section">
+        <div class="role-title-wrapper">
+            <span class="role-title">{{ role_name }}s</span>
+        </div>
+
+        <div class="team-grid">
+            {% for profile in members %}
+            <div class="team-card">
+                <!-- Dynamic banner color based on role -->
+                <div
+                    class="card-banner {% if role_name == 'Author' %}banner-author{% elif role_name == 'Editor' %}banner-editor{% elif role_name == 'Writer' %}banner-writer{% elif role_name == 'SEO Expert' %}banner-seo{% endif %}">
+                </div>
+
+                <div class="card-avatar-wrapper">
+                    <img class="card-avatar" src="{{ profile.get_image_url }}" alt="{{ profile.user.get_full_name }}">
+                </div>
+
+                <div class="card-body">
+                    <h3 class="member-name">{{ profile.user.get_full_name|default:profile.user.username }}</h3>
+                    <span class="member-role">{{ profile.role }}</span>
+
+                    <p class="member-bio">
+                        {{ profile.bio|default:"No bio available yet."|truncatewords:25 }}
+                    </p>
+
+                    <div class="social-links">
+                        {% if profile.linkedin_url %}
+                        <a href="{{ profile.linkedin_url }}" class="social-btn social-linkedin" target="_blank"
+                            title="LinkedIn">
+                            <i class="fa fa-linkedin"></i>
+                        </a>
+                        {% endif %}
+                        {% if profile.twitter_url %}
+                        <a href="{{ profile.twitter_url }}" class="social-btn social-twitter" target="_blank"
+                            title="Twitter/X">
+                            <i class="fa fa-twitter"></i>
+                        </a>
+                        {% endif %}
+                        {% if profile.website_url %}
+                        <a href="{{ profile.website_url }}" class="social-btn social-website" target="_blank"
+                            title="Website">
+                            <i class="fa fa-globe"></i>
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+    {% endfor %}
+</div>
+
+{% endblock %}

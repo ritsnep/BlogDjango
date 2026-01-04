@@ -28,6 +28,8 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 
+
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -65,6 +67,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'blog.context_processors.menu_categories',
             ],
         },
     },
@@ -78,18 +81,9 @@ WSGI_APPLICATION = 'mywebsite.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',  # Update the engine to MySQL
-        'NAME': 'myblogwebsite',  # Replace with your actual database name
-        'USER': 'root',  # Replace with your MySQL username
-        'PASSWORD': '',  # Replace with your MySQL password
-        'HOST': 'localhost',  # Keep localhost for XAMPP
-        'PORT': '3306',  # Default MySQL port on XAMPP
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.sqlite3',
-    #     'NAME': BASE_DIR / 'db.sqlite3',
-        
-    # }
 }
 
 
@@ -130,6 +124,10 @@ USE_TZ = True
 STATIC_URL = 'static/'
 MEDIA_URL='/media/'
 MEDIA_ROOT= BASE_DIR / 'media/'
+
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field

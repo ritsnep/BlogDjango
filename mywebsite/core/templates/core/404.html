@@ -1,0 +1,113 @@
+{% extends 'core/base.html' %}
+{% block title %}
+Page Not Found - 404 |
+{% endblock %}
+{% block content %}
+
+<style>
+    .error-container {
+        text-align: center;
+        padding: 4rem 1rem;
+        min-height: 60vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .error-content {
+        max-width: 600px;
+    }
+
+    .error-number {
+        font-size: 8rem;
+        font-weight: 900;
+        color: #3273dc;
+        margin: 0;
+        line-height: 1;
+    }
+
+    .error-title {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: #333;
+        margin: 1rem 0;
+    }
+
+    .error-message {
+        font-size: 1.1rem;
+        color: #666;
+        margin-bottom: 2rem;
+    }
+
+    .error-buttons {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .btn {
+        display: inline-block;
+        padding: 0.75rem 1.5rem;
+        border-radius: 4px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s;
+    }
+
+    .btn-primary {
+        background: #3273dc;
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background: #2366d1;
+    }
+
+    .btn-secondary {
+        background: #f5f5f5;
+        color: #333;
+    }
+
+    .btn-secondary:hover {
+        background: #e0e0e0;
+    }
+
+    @media (max-width: 768px) {
+        .error-number {
+            font-size: 5rem;
+        }
+
+        .error-title {
+            font-size: 1.4rem;
+        }
+
+        .error-message {
+            font-size: 1rem;
+        }
+
+        .error-buttons {
+            flex-direction: column;
+        }
+
+        .btn {
+            width: 100%;
+        }
+    }
+</style>
+
+<div class="error-container">
+    <div class="error-content">
+        <h1 class="error-number">404</h1>
+        <h2 class="error-title">Page Not Found</h2>
+        <p class="error-message">
+            Sorry, the page you're looking for doesn't exist.
+        </p>
+        <div class="error-buttons">
+            <a href="/" class="btn btn-primary">Go to Homepage</a>
+            <a href="javascript:history.back()" class="btn btn-secondary">Go Back</a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
