@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -23,9 +24,22 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-#hsz=l0m3lehsx!^dksmee(bz-um@rh8-(t(tb_hhaee=d-@v_'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# Use environment variable DJANGO_DEBUG to toggle in production (default True for local)
+DEBUG = os.environ.get("DJANGO_DEBUG", "True") == "True"
 
-ALLOWED_HOSTS = []
+# Allow local dev and your PythonAnywhere host
+ALLOWED_HOSTS = [
+    "localhost",
+    "127.0.0.1",
+    "sunil007.pythonanywhere.com",
+]
+
+# CSRF trusted origins for local and PythonAnywhere
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:8000",
+    "http://127.0.0.1:8000",
+    "https://sunil007.pythonanywhere.com",
+]
 
 
 
@@ -123,6 +137,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 MEDIA_URL='/media/'
 MEDIA_ROOT= BASE_DIR / 'media/'
 
