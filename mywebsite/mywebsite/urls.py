@@ -39,6 +39,7 @@ urlpatterns = [
     path('about/',about, name='about'),
     path('team/', meet_the_team, name='meet_the_team'),
     path('test-404/', test_404, name='test_404'),  # Test URL for 404 page
+    path('ckeditor5/', include('django_ckeditor_5.urls')),
     path('', include('blog.urls')),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
