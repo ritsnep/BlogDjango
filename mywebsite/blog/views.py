@@ -1,4 +1,5 @@
 from django.db.models import Q, Count
+from django.conf import settings
 from django.shortcuts import get_object_or_404, redirect, render
 from django.core.paginator import Paginator
 from .forms import CommentForm
@@ -49,7 +50,7 @@ def all_latest_articles(request):
     return render(request, 'blog/all_articles.html', {
         'posts': posts,
         'total_count': articles.count(),
-        'section_title': 'Latest from Search Engine Land'
+        'section_title': f"Latest from {settings.SITE_NAME}"
     })
 
 def all_trending_articles(request):
@@ -67,7 +68,7 @@ def all_trending_articles(request):
     return render(request, 'blog/all_articles.html', {
         'posts': posts,
         'total_count': articles.count(),
-        'section_title': 'Trending from Search Engine Land'
+        'section_title': f"Trending from {settings.SITE_NAME}"
     })
 
 def all_recent_articles(request):
@@ -81,7 +82,7 @@ def all_recent_articles(request):
     return render(request, 'blog/all_articles.html', {
         'posts': posts,
         'total_count': articles.count(),
-        'section_title': 'Recent from Search Engine Land'
+        'section_title': f"Recent from {settings.SITE_NAME}"
     })
 
 from django.contrib.auth.models import User

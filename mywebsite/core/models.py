@@ -16,6 +16,7 @@ class UserProfile(models.Model):
 
 
     profile_image = models.ImageField(upload_to='uploads/authors/', blank=True, null=True)
+    email = models.EmailField(blank=True, null=True)
     linkedin_url = models.URLField(blank=True, null=True)
     twitter_url = models.URLField(blank=True, null=True)
     website_url = models.URLField(blank=True, null=True)
@@ -31,3 +32,8 @@ class UserProfile(models.Model):
             return self.profile_image.url
         # Return a default avatar or None
         return "https://ui-avatars.com/api/?name=" + self.user.username + "&background=random"
+
+    def get_contact_email(self):
+        """Return the preferred public contact email for this author.
+        Falls back to the linked User's email when profile email is not set."""
+        return self.email or getattr(self.user, 'email', '')

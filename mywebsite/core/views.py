@@ -5,6 +5,7 @@ from django.contrib.sitemaps import Sitemap
 from django.contrib.sitemaps.views import sitemap as sitemap_view
 from django.views.decorators.http import condition
 from django.template.loader import render_to_string
+from django.urls import reverse
 
 from blog.models import Post, Category
 from mywebsite.sitemaps import CategorySitemap, PostSitemap, UserSitemap, StaticSitemap
@@ -88,11 +89,12 @@ def about(request):
     return render(request, 'core/about.html')
 
 def robot_txt(request):
-    text= [
-        "User-Agent: *",
-        "Disallow: /admin/"
+    lines = [
+        "User-agent: *",
+        "Disallow: /admin/",
+        f"Sitemap: {request.build_absolute_uri(reverse('django.contrib.sitemaps.views.sitemap'))}"
     ]
-    return HttpResponse("\n".join(text),content_type="text/plain")
+    return HttpResponse("\n".join(lines), content_type="text/plain")
 
 def custom_404(request, exception):
     """Custom 404 error handler"""

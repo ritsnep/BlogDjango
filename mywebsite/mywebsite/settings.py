@@ -137,6 +137,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CKEDITOR_UPLOAD_PATH = "uploads/"
 
+# Site-wide name used in templates and views
+SITE_NAME = "Ritesh Nepali's Blogs"
+
 CKEDITOR_5_CONFIGS = {
     'default': {
         'toolbar': ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote', 'imageUpload', ],

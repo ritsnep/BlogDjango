@@ -34,14 +34,14 @@
             bottom: 0;
             left: 0;
             width: 100%;
-            height: 5px;
+            height: 3px;
             background: #e3f2fd;
             z-index: 1001;
         }
 
         #scroll-progress-bar {
             height: 100%;
-            background: #6ea8fe;
+            background: #9ec5fe;
             width: 0%;
             transition: width 0.1s ease-out;
         }

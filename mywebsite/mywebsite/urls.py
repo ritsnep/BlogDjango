@@ -31,7 +31,7 @@ from core.views import frontpage, about, robot_txt, test_404, meet_the_team, sit
 sitemaps= {'category':  CategorySitemap, 'post':PostSitemap}
 
 urlpatterns = [
-    path('robot_txt',robot_txt,name='robot_txt'),
+    path('robots.txt', robot_txt, name='robots_txt'),
     path('sitemap.xml', sitemap_xml, name='django.contrib.sitemaps.views.sitemap'),
     path('sitemap/', sitemap_html, name='sitemap_html'),
     path('admin/', admin.site.urls),
