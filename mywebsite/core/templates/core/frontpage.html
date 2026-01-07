@@ -1057,6 +1057,16 @@ Home |
             margin-bottom: 1.5rem;
         }
     }
+    /* frontpage overflow fixes */
+    .promo-column, .ad-card, .ad-card-dark { max-width: 100%; box-sizing: border-box; }
+    .ad-card, .ad-card-dark { overflow: hidden; }
+    .ad-newsletter .ad-input-group { max-width: 100%; }
+    .ad-newsletter .ad-input-group input { min-width: 0; }
+    @media (max-width: 768px) {
+        .ad-card, .ad-card-dark { padding: 1rem; }
+        .ad-newsletter .ad-input-group { display: flex; }
+        .ad-newsletter .ad-input-group button { white-space: nowrap; }
+    }
 </style>
 
 <div class="homepage-container">
