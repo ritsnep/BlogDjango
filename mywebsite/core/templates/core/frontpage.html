@@ -1063,10 +1063,23 @@ Home |
     .ad-newsletter .ad-input-group { max-width: 100%; }
     .ad-newsletter .ad-input-group input { min-width: 0; }
     @media (max-width: 768px) {
-        .ad-card, .ad-card-dark { padding: 1rem; }
-        .ad-newsletter .ad-input-group { display: flex; }
-        .ad-newsletter .ad-input-group button { white-space: nowrap; }
+        .ad-card, .ad-card-dark { padding: 1rem; width: 100%; }
+        .ad-newsletter .ad-input-group { display: flex; flex-wrap: wrap; }
+        .ad-newsletter .ad-input-group button { width: 100%; margin-top: 0.5rem; }
     }
+    @media (max-width: 480px) {
+        .ad-newsletter .ad-input-group { flex-wrap: wrap; }
+        .ad-newsletter .ad-input-group button { width: 100%; margin-top: 0.5rem; }
+        .top-section, .latest-news, .promo-column { width: 100%; max-width: 100%; }
+    }
+    /* Ensure no horizontal overflow from nested elements */
+    .homepage-container, .top-section, .latest-news, .promo-column, .news-list { overflow-x: hidden; }
+    .ad-newsletter .ad-input-group, .ad-newsletter .ad-input-group * { box-sizing: border-box; }
+    .ad-newsletter .ad-input-group { width: 100%; }
+    .ad-newsletter .ad-input-group input { flex: 1 1 auto; min-width: 0; }
+    .news-item { min-width: 0; }
+    .ad-card *, .ad-card-dark * { max-width: 100%; }
+    .ad-card img, .ad-card-dark img { width: 100%; height: auto; }
 </style>
 
 <div class="homepage-container">
