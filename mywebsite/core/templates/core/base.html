@@ -458,7 +458,22 @@
                 margin-bottom: 0;
             }
         }
-    </style>
+            body { overflow-x: hidden; }
+        nav.navbar { overflow-x: hidden; }
+
+        @media (max-width: 1023px) {
+            .navbar-brand strong {
+                font-size: 0.95rem !important;
+                max-width: calc(100% - 3.25rem);
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+            }
+            .navbar-burger { position: relative; z-index: 1002; }
+            .navbar-menu { position: relative; width: 100%; overflow-x: hidden; }
+            .navbar-menu.is-active { width: 100vw; margin-left: calc(50% - 50vw); }
+        }
+</style>
 </head>
 
 <body>
