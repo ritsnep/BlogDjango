@@ -47,8 +47,8 @@
 
     .role-title {
         font-size: 2rem;
-        font-weight: 700;
-        color: var(--secondary-color);
+        font-weight: 800;
+        color: #000;
         background: #fff;
         padding: 0 1.5rem;
         z-index: 1;
@@ -242,11 +242,18 @@
 </div>
 
 <div class="container pb-6">
-    <div class="team-grid">
-        {% for role_name, members in role_groups %}
+    {% for role_name, members in role_groups %}
+    {% if members %}
+    <div class="role-section">
+        <div class="role-title-wrapper">
+            <h2 class="role-title">{{ role_name }}</h2>
+        </div>
+        <div class="team-grid">
             {% for profile in members %}
             <div class="team-card">
-                <div class="card-banner {% if role_name == 'Author' %}banner-author{% elif role_name == 'Editor' %}banner-editor{% elif role_name == 'Writer' %}banner-writer{% elif role_name == 'SEO Expert' %}banner-seo{% endif %}"></div>
+                <div
+                    class="card-banner {% if role_name == 'Author' %}banner-author{% elif role_name == 'Editor' %}banner-editor{% elif role_name == 'Writer' %}banner-writer{% elif role_name == 'SEO Expert' %}banner-seo{% endif %}">
+                </div>
                 <div class="card-avatar-wrapper">
                     <img class="card-avatar" src="{{ profile.get_image_url }}" alt="{{ profile.user.get_full_name }}">
                 </div>
@@ -256,17 +263,20 @@
                     <p class="member-bio">{{ profile.bio|default:"No bio available yet."|truncatewords:25 }}</p>
                     <div class="social-links">
                         {% if profile.linkedin_url %}
-                        <a href="{{ profile.linkedin_url }}" class="social-btn social-linkedin" target="_blank" title="LinkedIn">
+                        <a href="{{ profile.linkedin_url }}" class="social-btn social-linkedin" target="_blank"
+                            title="LinkedIn">
                             <i class="fa fa-linkedin"></i>
                         </a>
                         {% endif %}
                         {% if profile.twitter_url %}
-                        <a href="{{ profile.twitter_url }}" class="social-btn social-twitter" target="_blank" title="Twitter/X">
+                        <a href="{{ profile.twitter_url }}" class="social-btn social-twitter" target="_blank"
+                            title="Twitter/X">
                             <i class="fa fa-twitter"></i>
                         </a>
                         {% endif %}
                         {% if profile.website_url %}
-                        <a href="{{ profile.website_url }}" class="social-btn social-website" target="_blank" title="Website">
+                        <a href="{{ profile.website_url }}" class="social-btn social-website" target="_blank"
+                            title="Website">
                             <i class="fa fa-globe"></i>
                         </a>
                         {% endif %}
@@ -274,6 +284,8 @@
                 </div>
             </div>
             {% endfor %}
-        {% endfor %}
+        </div>
     </div>
+    {% endif %}
+    {% endfor %}
 </div>{% endblock %}

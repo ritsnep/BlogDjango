@@ -30,14 +30,11 @@ Home |
     }
 
     .featured-label {
-        font-size: 1.05rem;
-        font-weight: 900;
-        letter-spacing: 0.6px;
-        color: #0b1628;
-        margin-bottom: 0.8rem;
-        padding-bottom: 0.5rem;
-        border-bottom: 1px solid #cfd6e0;
-        /* slightly thinner and lighter */
+        font-size: 1.15rem;
+        font-weight: 800;
+        letter-spacing: 0.8px;
+        color: #000;
+        margin-bottom: 1.5rem;
         text-transform: uppercase;
     }
 
@@ -56,15 +53,14 @@ Home |
     }
 
     .featured-content h1 {
-        font-size: 2rem;
+        font-size: 2.22rem;
         margin: 0 0 1rem 0;
-        line-height: 1.3;
-        font-weight: bold;
-        color: #0b1628;
+        line-height: 1.25;
+        font-weight: 800;
+        color: #000;
     }
 
     .featured-content p {
-        font-family: 'Lora', serif;
         color: #4b5563;
         line-height: 1.6;
         margin: 1rem 0;
@@ -74,7 +70,7 @@ Home |
     .featured-meta {
         font-size: 0.85rem;
         color: #6b7280;
-        margin-top: 0.75rem;
+        margin-top: 1rem;
         display: flex;
         align-items: center;
         gap: .75rem;
@@ -140,16 +136,14 @@ Home |
     }
 
     .article-card-info h3 {
-        font-family: 'Montserrat', sans-serif;
         font-size: 1.1rem;
         font-weight: 800;
-        color: #0b1628;
+        color: #000;
         margin: 0.4rem 0 0.6rem 0;
         line-height: 1.35;
     }
 
     .article-card-info p {
-        font-family: 'Lora', serif;
         font-size: 0.95rem;
         color: #475569;
         line-height: 1.55;
@@ -343,14 +337,11 @@ Home |
     }
 
     .news-label {
-        font-size: 1.05rem;
-        font-weight: 900;
-        letter-spacing: 0.6px;
-        color: #0b1628;
-        margin-bottom: 1rem;
-        padding-bottom: 0.5rem;
-        border-bottom: 1px solid #cfd6e0;
-        /* slightly thinner and lighter */
+        font-size: 1.15rem;
+        font-weight: 800;
+        letter-spacing: 0.8px;
+        color: #000;
+        margin-bottom: 1.5rem;
         text-transform: uppercase;
     }
 
@@ -388,12 +379,11 @@ Home |
     }
 
     .news-item-content h3 {
-        font-family: 'Montserrat', sans-serif;
         font-size: 1rem;
         font-weight: 800;
         margin: 0 0 0.35rem 0;
         line-height: 1.35;
-        color: #0b1628;
+        color: #000;
     }
 
     .news-item-meta {
@@ -406,8 +396,8 @@ Home |
 
     .category-tag {
         display: inline-block;
-        font-size: 0.7rem;
-        color: #6b7280;
+        font-size: 0.75rem;
+        color: #666;
         margin-right: 0.5rem;
         font-weight: 700;
         text-transform: uppercase;
@@ -431,9 +421,9 @@ Home |
 
     .column-label {
         font-size: 1.15rem;
-        font-weight: 900;
+        font-weight: 800;
         letter-spacing: 0.8px;
-        color: #1a202c;
+        color: #000;
         margin-bottom: 1.5rem;
         text-transform: uppercase;
         display: block;
@@ -482,12 +472,11 @@ Home |
     }
 
     .article-row-content h3 {
-        font-family: 'Montserrat', sans-serif;
-        font-size: 1.05rem;
-        font-weight: 800;
+        font-size: 1.15rem;
+        font-weight: 700;
         margin: 0 0 0.3rem 0;
-        line-height: 1.35;
-        color: #0b1628;
+        line-height: 1.3;
+        color: #000;
     }
 
     .article-row-meta {
@@ -544,11 +533,10 @@ Home |
     }
 
     .section-title {
-        font-family: 'Montserrat', sans-serif;
         font-size: 1.8rem;
         font-weight: 800;
         margin-bottom: 2rem;
-        color: #1a1a1a;
+        color: #000;
     }
 
     .section-title span {
@@ -577,8 +565,8 @@ Home |
 
     .tab-item:hover,
     .tab-item.active {
-        color: #333;
-        border-bottom-color: #333;
+        color: #000;
+        border-bottom-color: #000;
     }
 
     .guides-grid {
@@ -1187,7 +1175,7 @@ Home |
                     <div class="news-item-content">
                         <div class="category-tag">{{ post.category.title }}</div>
                         <h3>{{ post.title }}</h3>
-                        <div class="news-item-meta">{{ post.author.get_full_name|default:post.author.username }} • {{ post.created_at|date:"M d, Y" }}</div>
+                        <div class="news-item-meta">{{ post.author.get_full_name|default:post.author.username }} - {{ post.created_at|date:"M d, Y" }}</div>
                     </div>
                 </a>
                 {% endfor %}
@@ -1239,7 +1227,7 @@ Home |
                     <div class="article-row-content">
                         <div class="category-tag">{{ post.category.title }}</div>
                         <h3>{{ post.title }}</h3>
-                        <div class="article-row-meta">{{ post.author.get_full_name|default:post.author.username }} • {{ post.created_at|date:"M d, Y" }}</div>
+                        <div class="article-row-meta">{{ post.author.get_full_name|default:post.author.username }} - {{ post.created_at|date:"M d, Y" }}</div>
                     </div>
                 </a>
                 {% endfor %}
@@ -1268,7 +1256,7 @@ Home |
                     <div class="article-row-content">
                         <div class="category-tag">{{ post.category.title }}</div>
                         <h3>{{ post.title }}</h3>
-                        <div class="article-row-meta">{{ post.author.get_full_name|default:post.author.username }} • {{ post.created_at|date:"M d, Y" }}</div>
+                        <div class="article-row-meta">{{ post.author.get_full_name|default:post.author.username }} - {{ post.created_at|date:"M d, Y" }}</div>
                     </div>
                 </a>
                 {% endfor %}
@@ -1468,7 +1456,7 @@ Home |
                     <div class="article-row-content">
                         <div class="category-tag">SEO</div>
                         <h3>{{ post.title }}</h3>
-                        <div class="article-row-meta">{{ post.author.get_full_name|default:post.author.username }} • {{ post.created_at|date:"M d, Y" }}</div>
+                        <div class="article-row-meta">{{ post.author.get_full_name|default:post.author.username }} - {{ post.created_at|date:"M d, Y" }}</div>
                     </div>
                 </a>
                 {% endfor %}
@@ -1494,7 +1482,7 @@ Home |
                     <div class="article-row-content">
                         <div class="category-tag">Digital Marketing</div>
                         <h3>{{ post.title }}</h3>
-                        <div class="article-row-meta">{{ post.author.get_full_name|default:post.author.username }} • {{ post.created_at|date:"M d, Y" }}</div>
+                        <div class="article-row-meta">{{ post.author.get_full_name|default:post.author.username }} - {{ post.created_at|date:"M d, Y" }}</div>
                     </div>
                 </a>
                 {% endfor %}
