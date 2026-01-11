@@ -155,7 +155,8 @@
         .navbar-dropdown-container {
             position: relative;
             display: flex;
-            align-items: center;
+            align-items: stretch;
+            /* Changed from center to stretch to fill navbar height */
             height: 100%;
         }
 
@@ -190,7 +191,7 @@
             border-radius: 4px;
             min-width: 200px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            z-index: 100;
+            z-index: 2000;
             opacity: 0;
             visibility: hidden;
             transform: translateY(-10px);
@@ -201,6 +202,10 @@
         }
 
         @media (min-width: 1024px) {
+            .navbar-menu {
+                display: flex !important;
+            }
+
             .navbar-dropdown-container:hover .navbar-dropdown-menu {
                 opacity: 1;
                 visibility: visible;
@@ -476,7 +481,7 @@
         }
 
         nav.navbar {
-            overflow-x: hidden;
+            /* overflow-x: hidden removed to allow dropdowns to show */
         }
 
         @media (max-width: 1023px) {
