@@ -17,14 +17,26 @@
 
         body {
             font-family: 'Nunito', sans-serif;
+            padding-top: 70px;
+            /* Adjust based on navbar height */
+        }
+
+        @media screen and (max-width: 1023px) {
+            body {
+                padding-top: 60px;
+                /* Adjust for mobile if needed */
+            }
         }
 
         nav.navbar {
             height: auto !important;
             box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .1), 0 1px 2px 0 rgba(0, 0, 0, .06) !important;
             padding: 0;
-            position: sticky;
+            position: fixed;
             top: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
             z-index: 1000;
             background-color: white !important;
         }
@@ -458,8 +470,14 @@
                 margin-bottom: 0;
             }
         }
-            body { overflow-x: hidden; }
-        nav.navbar { overflow-x: hidden; }
+
+        body {
+            overflow-x: hidden;
+        }
+
+        nav.navbar {
+            overflow-x: hidden;
+        }
 
         @media (max-width: 1023px) {
             .navbar-brand strong {
@@ -469,11 +487,24 @@
                 white-space: nowrap;
                 text-overflow: ellipsis;
             }
-            .navbar-burger { position: relative; z-index: 1002; }
-            .navbar-menu { position: relative; width: 100%; overflow-x: hidden; }
-            .navbar-menu.is-active { width: 100vw; margin-left: calc(50% - 50vw); }
+
+            .navbar-burger {
+                position: relative;
+                z-index: 1002;
+            }
+
+            .navbar-menu {
+                position: relative;
+                width: 100%;
+                overflow-x: hidden;
+            }
+
+            .navbar-menu.is-active {
+                width: 100vw;
+                margin-left: calc(50% - 50vw);
+            }
         }
-</style>
+    </style>
 </head>
 
 <body>
