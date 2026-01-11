@@ -407,14 +407,14 @@ Home |
     .category-tag {
         display: inline-block;
         font-size: 0.7rem;
-        background: #eaf2ff;
-        color: #1e3a8a;
-        padding: 0.22rem 0.55rem;
-        border-radius: 999px;
+        color: #6b7280;
         margin-right: 0.5rem;
-        font-weight: 800;
-        letter-spacing: .2px;
-        border: 1px solid #c7ddff;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: .5px;
+        background: transparent;
+        border: none;
+        padding: 0;
     }
 
     /* BOTTOM SECTION */
@@ -430,29 +430,16 @@ Home |
     }
 
     .column-label {
-        font-size: 1.05rem;
+        font-size: 1.15rem;
         font-weight: 900;
-        letter-spacing: 0.6px;
-        color: #0b1628;
-        margin-bottom: 1rem;
-        padding-bottom: 0.5rem;
-        border-bottom: 1px solid #cfd6e0;
-        /* slightly thinner and lighter */
+        letter-spacing: 0.8px;
+        color: #1a202c;
+        margin-bottom: 1.5rem;
         text-transform: uppercase;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
+        display: block;
     }
 
-    .column-label::before {
-        content: '';
-        display: inline-block;
-        width: 12px;
-        height: 2px;
-        background: #34d399;
-        /* subtler green */
-        border-radius: 2px;
-    }
+    /* Removed dash prefix */
 
     .articles-list {
         display: flex;
@@ -546,16 +533,7 @@ Home |
     }
 
     .trending-label::before {
-        content: "\f201";
-        /* fa-line-chart (Font Awesome 4) */
-        font-family: FontAwesome;
-        font-style: normal;
-        font-weight: normal;
-        display: inline-block;
-        margin-right: 0.4rem;
-        font-size: 0.95rem;
-        line-height: 1;
-        vertical-align: baseline;
+        display: none;
     }
 
     /* GUIDES SECTION */
@@ -1184,16 +1162,7 @@ Home |
                     <h1>{{ featured_post.title }}</h1>
                 </a>
                 <p>{{ featured_post.intro }}</p>
-                <div class="featured-meta">
-                    <span class="meta-piece">
-                        <i class="fa fa-user"></i>
-                        {{ featured_post.author.get_full_name|default:featured_post.author.username }}
-                    </span>
-                    <span class="meta-piece">
-                        <i class="fa fa-calendar"></i>
-                        {{ featured_post.created_at|date:"F d, Y" }}
-                    </span>
-                </div>
+                <div class="featured-meta">{{ featured_post.author.get_full_name|default:featured_post.author.username }} • {{ featured_post.created_at|date:"M d, Y" }}</div>
             </div>
             {% endif %}
         </div>
@@ -1218,7 +1187,7 @@ Home |
                     <div class="news-item-content">
                         <div class="category-tag">{{ post.category.title }}</div>
                         <h3>{{ post.title }}</h3>
-                        <div class="news-item-meta"><i class="fa fa-clock"></i>{{ post.created_at|timesince }} ago</div>
+                        <div class="news-item-meta">{{ post.author.get_full_name|default:post.author.username }} • {{ post.created_at|date:"M d, Y" }}</div>
                     </div>
                 </a>
                 {% endfor %}
@@ -1268,20 +1237,15 @@ Home |
                         {% endif %}
                     </div>
                     <div class="article-row-content">
+                        <div class="category-tag">{{ post.category.title }}</div>
                         <h3>{{ post.title }}</h3>
-                        <div class="article-row-meta">
-                            <span class="category-tag">{{ post.category.title }}</span>
-                            <span class="meta-piece">
-                                <i class="fa fa-calendar"></i>
-                                {{ post.created_at|date:"F d, Y" }}
-                            </span>
-                        </div>
+                        <div class="article-row-meta">{{ post.author.get_full_name|default:post.author.username }} • {{ post.created_at|date:"M d, Y" }}</div>
                     </div>
                 </a>
                 {% endfor %}
                 {% endif %}
             </div>
-            <a href="{% url 'all_recent' %}" class="see-all-button">See All Articles</a>
+            <a href="{% url 'all_recent' %}" class="see-all-button">SEE ALL ARTICLES</a>
         </div>
 
         <!-- TRENDING ARTICLES -->
@@ -1302,20 +1266,15 @@ Home |
                         {% endif %}
                     </div>
                     <div class="article-row-content">
+                        <div class="category-tag">{{ post.category.title }}</div>
                         <h3>{{ post.title }}</h3>
-                        <div class="article-row-meta">
-                            <span class="category-tag">{{ post.category.title }}</span>
-                            <span class="meta-piece">
-                                <i class="fa fa-calendar"></i>
-                                {{ post.created_at|date:"F d, Y" }}
-                            </span>
-                        </div>
+                        <div class="article-row-meta">{{ post.author.get_full_name|default:post.author.username }} • {{ post.created_at|date:"M d, Y" }}</div>
                     </div>
                 </a>
                 {% endfor %}
                 {% endif %}
             </div>
-            <a href="{% url 'all_trending' %}" class="see-all-button">See All Articles</a>
+            <a href="{% url 'all_trending' %}" class="see-all-button">SEE ALL ARTICLES</a>
         </div>
     </div>
 
@@ -1507,19 +1466,16 @@ Home |
                         {% endif %}
                     </div>
                     <div class="article-row-content">
-                        <span class="category-tag">SEO</span>
+                        <div class="category-tag">SEO</div>
                         <h3>{{ post.title }}</h3>
-                        <div class="article-row-meta">
-                            <span>{{ post.author.get_full_name|default:post.author.username }}</span> • <span>{{
-                                post.created_at|date:"F d, Y" }}</span>
-                        </div>
+                        <div class="article-row-meta">{{ post.author.get_full_name|default:post.author.username }} • {{ post.created_at|date:"M d, Y" }}</div>
                     </div>
                 </a>
                 {% endfor %}
             </div>
             {% if seo_cat %}
             <div style="margin-top: 2.5rem; text-align: left;">
-                <a href="{% url 'category_detail' seo_cat.slug %}" class="see-all-button">See All Articles</a>
+                <a href="{% url 'category_detail' seo_cat.slug %}" class="see-all-button">SEE ALL ARTICLES</a>
             </div>
             {% endif %}
         </div>
@@ -1536,19 +1492,16 @@ Home |
                         {% endif %}
                     </div>
                     <div class="article-row-content">
-                        <span class="category-tag">Digital Marketing</span>
+                        <div class="category-tag">Digital Marketing</div>
                         <h3>{{ post.title }}</h3>
-                        <div class="article-row-meta">
-                            <span>{{ post.author.get_full_name|default:post.author.username }}</span> • <span>{{
-                                post.created_at|date:"F d, Y" }}</span>
-                        </div>
+                        <div class="article-row-meta">{{ post.author.get_full_name|default:post.author.username }} • {{ post.created_at|date:"M d, Y" }}</div>
                     </div>
                 </a>
                 {% endfor %}
             </div>
             {% if dm_cat %}
             <div style="margin-top: 2.5rem; text-align: left;">
-                <a href="{% url 'category_detail' dm_cat.slug %}" class="see-all-button">See All Articles</a>
+                <a href="{% url 'category_detail' dm_cat.slug %}" class="see-all-button">SEE ALL ARTICLES</a>
             </div>
             {% endif %}
         </div>
