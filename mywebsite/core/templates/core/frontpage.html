@@ -11,12 +11,12 @@ Home |
         padding: 2rem 1rem;
     }
 
-    /* widen container on homepage */
+    /* Widen container */
     .section>.container {
         max-width: 1440px;
     }
 
-    /* TOP SECTION: Featured + Latest News */
+    /* TOP SECTION */
     .top-section {
         display: grid;
         grid-template-columns: 1.2fr 1fr 0.6fr;
@@ -64,10 +64,11 @@ Home |
     }
 
     .featured-content p {
+        font-family: 'Lora', serif;
         color: #4b5563;
         line-height: 1.6;
         margin: 1rem 0;
-        font-size: 0.95rem;
+        font-size: 1.05rem;
     }
 
     .featured-meta {
@@ -108,13 +109,13 @@ Home |
         color: #3273dc;
     }
 
-    /* Latest News Section */
+    /* Latest News */
     .latest-news {
         display: flex;
         flex-direction: column;
     }
 
-    /* Promo/Ad card in Latest News sidebar */
+    /* Promo card */
     .ad-card {
         border: 1px solid #e5e9f0;
         border-radius: 10px;
@@ -138,19 +139,21 @@ Home |
         text-transform: uppercase;
     }
 
-    .ad-card h4 {
-        font-size: 1rem;
-        font-weight: 900;
+    .article-card-info h3 {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 1.1rem;
+        font-weight: 800;
         color: #0b1628;
-        margin: 0.1rem 0 0.2rem;
-        line-height: 1.3;
+        margin: 0.4rem 0 0.6rem 0;
+        line-height: 1.35;
     }
 
-    .ad-card p {
-        font-size: 0.9rem;
+    .article-card-info p {
+        font-family: 'Lora', serif;
+        font-size: 0.95rem;
         color: #475569;
-        margin: 0;
         line-height: 1.55;
+        margin-bottom: 0.8rem;
     }
 
     .ad-card .ad-cta {
@@ -181,7 +184,7 @@ Home |
         transform: translateY(1px);
     }
 
-    /* Dedicated promo column */
+    /* Promo column */
     .promo-column {
         display: flex;
         flex-direction: column;
@@ -222,7 +225,7 @@ Home |
         background: #16a34a;
     }
 
-    /* Newsletter dark card refined */
+    /* Newsletter card */
     .ad-card-dark.ad-newsletter {
         background-color: #24223d;
         /* Precise dark navy from image */
@@ -385,6 +388,7 @@ Home |
     }
 
     .news-item-content h3 {
+        font-family: 'Montserrat', sans-serif;
         font-size: 1rem;
         font-weight: 800;
         margin: 0 0 0.35rem 0;
@@ -413,7 +417,7 @@ Home |
         border: 1px solid #c7ddff;
     }
 
-    /* BOTTOM SECTION: Recent + Trending */
+    /* BOTTOM SECTION */
     .bottom-section {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -491,6 +495,7 @@ Home |
     }
 
     .article-row-content h3 {
+        font-family: 'Montserrat', sans-serif;
         font-size: 1.05rem;
         font-weight: 800;
         margin: 0 0 0.3rem 0;
@@ -561,6 +566,7 @@ Home |
     }
 
     .section-title {
+        font-family: 'Montserrat', sans-serif;
         font-size: 1.8rem;
         font-weight: 800;
         margin-bottom: 2rem;
@@ -1057,29 +1063,102 @@ Home |
             margin-bottom: 1.5rem;
         }
     }
+
     /* frontpage overflow fixes */
-    .promo-column, .ad-card, .ad-card-dark { max-width: 100%; box-sizing: border-box; }
-    .ad-card, .ad-card-dark { overflow: hidden; }
-    .ad-newsletter .ad-input-group { max-width: 100%; }
-    .ad-newsletter .ad-input-group input { min-width: 0; }
+    .promo-column,
+    .ad-card,
+    .ad-card-dark {
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+
+    .ad-card,
+    .ad-card-dark {
+        overflow: hidden;
+    }
+
+    .ad-newsletter .ad-input-group {
+        max-width: 100%;
+    }
+
+    .ad-newsletter .ad-input-group input {
+        min-width: 0;
+    }
+
     @media (max-width: 768px) {
-        .ad-card, .ad-card-dark { padding: 1rem; width: 100%; }
-        .ad-newsletter .ad-input-group { display: flex; flex-wrap: wrap; }
-        .ad-newsletter .ad-input-group button { width: 100%; margin-top: 0.5rem; }
+
+        .ad-card,
+        .ad-card-dark {
+            padding: 1rem;
+            width: 100%;
+        }
+
+        .ad-newsletter .ad-input-group {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .ad-newsletter .ad-input-group button {
+            width: 100%;
+            margin-top: 0.5rem;
+        }
     }
+
     @media (max-width: 480px) {
-        .ad-newsletter .ad-input-group { flex-wrap: wrap; }
-        .ad-newsletter .ad-input-group button { width: 100%; margin-top: 0.5rem; }
-        .top-section, .latest-news, .promo-column { width: 100%; max-width: 100%; }
+        .ad-newsletter .ad-input-group {
+            flex-wrap: wrap;
+        }
+
+        .ad-newsletter .ad-input-group button {
+            width: 100%;
+            margin-top: 0.5rem;
+        }
+
+        .top-section,
+        .latest-news,
+        .promo-column {
+            width: 100%;
+            max-width: 100%;
+        }
     }
+
     /* Ensure no horizontal overflow from nested elements */
-    .homepage-container, .top-section, .latest-news, .promo-column, .news-list { overflow-x: hidden; }
-    .ad-newsletter .ad-input-group, .ad-newsletter .ad-input-group * { box-sizing: border-box; }
-    .ad-newsletter .ad-input-group { width: 100%; }
-    .ad-newsletter .ad-input-group input { flex: 1 1 auto; min-width: 0; }
-    .news-item { min-width: 0; }
-    .ad-card *, .ad-card-dark * { max-width: 100%; }
-    .ad-card img, .ad-card-dark img { width: 100%; height: auto; }
+    .homepage-container,
+    .top-section,
+    .latest-news,
+    .promo-column,
+    .news-list {
+        overflow-x: hidden;
+    }
+
+    .ad-newsletter .ad-input-group,
+    .ad-newsletter .ad-input-group * {
+        box-sizing: border-box;
+    }
+
+    .ad-newsletter .ad-input-group {
+        width: 100%;
+    }
+
+    .ad-newsletter .ad-input-group input {
+        flex: 1 1 auto;
+        min-width: 0;
+    }
+
+    .news-item {
+        min-width: 0;
+    }
+
+    .ad-card *,
+    .ad-card-dark * {
+        max-width: 100%;
+    }
+
+    .ad-card img,
+    .ad-card-dark img {
+        width: 100%;
+        height: auto;
+    }
 </style>
 
 <div class="homepage-container">
@@ -1106,8 +1185,14 @@ Home |
                 </a>
                 <p>{{ featured_post.intro }}</p>
                 <div class="featured-meta">
-                    <span class="meta-piece"><i class="fa fa-user"></i>{% if featured_post.author %}{% firstof featured_post.author.get_full_name featured_post.author.username %}{% else %}{{ featured_post.category.title }}{% endif %}</span>
-                    <span class="meta-piece"><i class="fa fa-calendar"></i>{{ featured_post.created_at|date:"M d, Y" }}</span>
+                    <span class="meta-piece">
+                        <i class="fa fa-user"></i>
+                        {{ featured_post.author.get_full_name|default:featured_post.author.username }}
+                    </span>
+                    <span class="meta-piece">
+                        <i class="fa fa-calendar"></i>
+                        {{ featured_post.created_at|date:"F d, Y" }}
+                    </span>
                 </div>
             </div>
             {% endif %}
@@ -1186,7 +1271,10 @@ Home |
                         <h3>{{ post.title }}</h3>
                         <div class="article-row-meta">
                             <span class="category-tag">{{ post.category.title }}</span>
-                            <span class="meta-piece"><i class="fa fa-calendar"></i>{{ post.created_at|date:"M d, Y" }}</span>
+                            <span class="meta-piece">
+                                <i class="fa fa-calendar"></i>
+                                {{ post.created_at|date:"F d, Y" }}
+                            </span>
                         </div>
                     </div>
                 </a>
@@ -1217,7 +1305,10 @@ Home |
                         <h3>{{ post.title }}</h3>
                         <div class="article-row-meta">
                             <span class="category-tag">{{ post.category.title }}</span>
-                            <span class="meta-piece"><i class="fa fa-calendar"></i>{{ post.created_at|date:"M d, Y" }}</span>
+                            <span class="meta-piece">
+                                <i class="fa fa-calendar"></i>
+                                {{ post.created_at|date:"F d, Y" }}
+                            </span>
                         </div>
                     </div>
                 </a>
@@ -1419,7 +1510,8 @@ Home |
                         <span class="category-tag">SEO</span>
                         <h3>{{ post.title }}</h3>
                         <div class="article-row-meta">
-                            <span>Admin</span> • <span>{{ post.created_at|date:"M d, Y" }}</span>
+                            <span>{{ post.author.get_full_name|default:post.author.username }}</span> • <span>{{
+                                post.created_at|date:"F d, Y" }}</span>
                         </div>
                     </div>
                 </a>
@@ -1447,7 +1539,8 @@ Home |
                         <span class="category-tag">Digital Marketing</span>
                         <h3>{{ post.title }}</h3>
                         <div class="article-row-meta">
-                            <span>Admin</span> • <span>{{ post.created_at|date:"M d, Y" }}</span>
+                            <span>{{ post.author.get_full_name|default:post.author.username }}</span> • <span>{{
+                                post.created_at|date:"F d, Y" }}</span>
                         </div>
                     </div>
                 </a>

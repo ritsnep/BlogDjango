@@ -1,8 +1,9 @@
 from django.contrib.sitemaps import Sitemap
 from django.shortcuts import reverse
+from blog.models import Category, Post
+from core.models import UserProfile
 
-from blog.models import Category,Post
-
+# Category sitemap
 class CategorySitemap(Sitemap):
     changefreq = 'monthly'
     priority = 0.8
@@ -10,6 +11,7 @@ class CategorySitemap(Sitemap):
     def items(self):
         return Category.objects.all()
 
+# Blog post sitemap
 class PostSitemap(Sitemap):
     changefreq = 'weekly'
     priority = 0.9
@@ -20,8 +22,7 @@ class PostSitemap(Sitemap):
     def lastmod(self, obj):
         return obj.created_at
 
-from core.models import UserProfile
-
+# Author sitemap
 class UserSitemap(Sitemap):
     changefreq = 'weekly'
     priority = 0.5
@@ -32,6 +33,7 @@ class UserSitemap(Sitemap):
     def location(self, obj):
         return f'/author/{obj.user.username}/'
 
+# Static pages sitemap
 class StaticSitemap(Sitemap):
     priority = 0.6
     changefreq = 'monthly'

@@ -62,9 +62,9 @@
             <!-- Right Content -->
             <div class="column is-9-desktop is-8-tablet pl-6-desktop">
 
-                <!-- About Section (Using BIO only) -->
+                <!-- About Section -->
                 <section class="mb-6">
-                    <h2 class="title is-2 mb-4" style="font-weight: 800;">About {{ author.get_full_name|default:author.username }}</h2>
+                    <h2 class="title is-2 mb-4" style="font-weight: 800;">About {{                         author.get_full_name|default:author.username }}</h2>
                     <div class="content is-medium" style="color: #444; line-height: 1.8;">
                         {{ author.userprofile.bio|linebreaks }}
                     </div>
@@ -74,7 +74,7 @@
 
                 <!-- Latest Articles List -->
                 <section>
-                    <h3 class="title is-4 mb-5" style="font-weight: 800;">{{ author.get_full_name|default:author.username }}'s latest articles</h3>
+                    <h3 class="title is-4 mb-5" style="font-weight: 800;">{{                         author.get_full_name|default:author.username }}'s latest articles</h3>
 
                     <div class="articles-list">
                         {% for post in posts %}
@@ -109,7 +109,7 @@
                                         {{ post.intro|truncatewords:20 }}
                                     </p>
                                     <p class="is-size-7 has-text-grey">
-                                        <span style="color: #666;">{{ author.get_full_name|default:author.username }}</span> | {{ post.created_at|date:"M d, Y" }} at {{ post.created_at|date:"g:i a" }}
+                                        <span style="color: #666;">{{ author.get_full_name|default:author.username }}</span> | {{ post.created_at|date:"F d, Y" }} at {{                                         post.created_at|date:"g:i a" }}
                                     </p>
                                 </div>
                             </div>
@@ -138,9 +138,3 @@
     </div>
 </section>
 {% endblock %}
-
-
-
-
-
-

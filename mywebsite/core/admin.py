@@ -4,30 +4,26 @@ from django.contrib.auth.models import User
 from .models import UserProfile
 from .forms import UserProfileForm
 
-# Define an inline admin descriptor for UserProfile model
-# which acts a bit like a singleton
+# Inline profile editor for User admin
 class UserProfileInline(admin.StackedInline):
     model = UserProfile
     form = UserProfileForm
     can_delete = False
-    verbose_name_plural = 'User Profile (Roles, Bio, Image, Image Link)'
+    verbose_name_plural = 'User Profile'
     fk_name = 'user'
 
-# Define a new User admin
+# Custom User admin including profile inline
 class UserAdmin(BaseUserAdmin):
     inlines = (UserProfileInline,)
-    
-    # Optional: Add role to the user list view
     list_display = ('username', 'email', 'first_name', 'last_name', 'is_staff', 'get_role')
     
     def get_role(self, instance):
-        return instance.userprofile.role
+        try:
+            return instance.userprofile.role
+        except UserProfile.DoesNotExist:
+            return None
     get_role.short_description = 'Role'
 
-# Re-register UserAdmin
+# Re-register User with customized admin
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
-
-# Keep the separate registration just in case, but usually inline is enough.
-# We can unregister it if we want to avoid clutter, but keeping it is fine.
-# admin.site.register(UserProfile) 

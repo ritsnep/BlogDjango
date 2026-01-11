@@ -2,9 +2,11 @@ from django.db.models import Q, Count
 from django.conf import settings
 from django.shortcuts import get_object_or_404, redirect, render
 from django.core.paginator import Paginator
+from django.contrib.auth.models import User
 from .forms import CommentForm
 from .models import Post,Category
 
+# View post detail and handle comments
 def detail(request, category_slug, slug):
     post=get_object_or_404(Post, slug=slug, status=Post.ACTIVE)
 
@@ -19,10 +21,10 @@ def detail(request, category_slug, slug):
     else:
         form = CommentForm()
     
-    # Get related posts from the same category (excluding current post)
+    # Get related posts from the same category
     related_posts = post.category.posts.filter(status=Post.ACTIVE).exclude(id=post.id)[:3]
     
-    # Calculate read time (roughly 200 words per minute)
+    # Calculate estimated read time
     word_count = len(post.body.split())
     read_time = max(1, word_count // 200)
 
@@ -34,13 +36,14 @@ def detail(request, category_slug, slug):
         'category':post.category
     })
 
+# View posts by category
 def category(request, slug):
     category=get_object_or_404(Category, slug=slug)
     posts=category.posts.filter(status=Post.ACTIVE)
     return render(request,'blog/category.html',{'category':category, 'posts':posts})
 
+# View all latest articles with pagination
 def all_latest_articles(request):
-    """Display all latest articles with pagination"""
     articles = Post.objects.filter(status=Post.ACTIVE).order_by('-created_at')
     
     paginator = Paginator(articles, 15)
@@ -53,8 +56,8 @@ def all_latest_articles(request):
         'section_title': f"Latest from {settings.SITE_NAME}"
     })
 
+# View all trending articles based on comment count
 def all_trending_articles(request):
-    """Display all trending articles (by comment count) with pagination"""
     articles = Post.objects.filter(
         status=Post.ACTIVE
     ).annotate(
@@ -71,8 +74,8 @@ def all_trending_articles(request):
         'section_title': f"Trending from {settings.SITE_NAME}"
     })
 
+# View all recent articles
 def all_recent_articles(request):
-    """Display all recent articles with pagination"""
     articles = Post.objects.filter(status=Post.ACTIVE).order_by('-created_at')
     
     paginator = Paginator(articles, 15)
@@ -85,13 +88,13 @@ def all_recent_articles(request):
         'section_title': f"Recent from {settings.SITE_NAME}"
     })
 
-from django.contrib.auth.models import User
-
+# Search for posts by title or content
 def search(request):
     query=request.GET.get('query','')
     posts=Post.objects.filter(status=Post.ACTIVE).filter(Q(title__icontains=query) | Q(intro__icontains=query) |  Q(body__icontains=query))
     return render(request,'blog/search.html',{'posts':posts,'query':query})
 
+# View posts by a specific author
 def author_detail(request, username):
     author = get_object_or_404(User, username=username)
     posts = author.posts.filter(status=Post.ACTIVE).order_by('-created_at')

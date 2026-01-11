@@ -14,7 +14,8 @@
         width: 100vw;
         margin-left: calc(50% - 50vw);
         margin-right: calc(50% - 50vw);
-        margin-top: -3rem; /* pull up to touch sticky navbar (offset Bulma .section top padding) */
+        margin-top: -3rem;
+        /* pull up to touch sticky navbar (offset Bulma .section top padding) */
         box-sizing: border-box;
         position: relative;
         z-index: 0;
@@ -56,8 +57,9 @@
     }
 
     .post-meta {
+        font-family: 'Open Sans', sans-serif;
         font-size: 0.9rem;
-        color: #666;
+        color: #717171;
         display: flex;
         gap: 2.5rem;
         margin-top: 1.5rem;
@@ -292,12 +294,14 @@
     }
 
     .article-body {
+        font-family: 'Lora', serif;
         white-space: normal;
         word-wrap: break-word;
         overflow-wrap: break-word;
-        font-size: 1rem;
+        font-size: 1.15rem;
+        /* Slightly larger for better readability */
         line-height: 1.8;
-        color: #444;
+        color: #2c2c2c;
     }
 
     .article-body p {
@@ -727,7 +731,8 @@
         .detail-header {
             padding: 2rem 0;
             margin-bottom: 2rem;
-            margin-top: -1.5rem; /* match mobile .section padding */
+            margin-top: -1.5rem;
+            /* match mobile .section padding */
         }
 
         .related-posts-grid {
@@ -759,22 +764,22 @@
 
 <div class="detail-header">
     <div class="detail-header-content">
-    <div class="breadcrumb-nav">
-        <a href="/">Home</a> •
-        <a href="{% url 'category_detail' post.category.slug %}">{{ post.category.title }}</a> •
-        <span>Article</span>
-    </div>
-    <div class="post-title-section">
-        <h1>{{ post.title }}</h1>
-        <div class="post-meta">
-            <span class="meta-item">
-                <span>Published:</span> {{ post.created_at|date:"F d, Y \a\t g:i A" }}
-            </span>
-            <span class="meta-item">
-                <span>Read Time:</span> {{ read_time }} minute{{ read_time|pluralize }}
-            </span>
+        <div class="breadcrumb-nav">
+            <a href="/">Home</a> •
+            <a href="{% url 'category_detail' post.category.slug %}">{{ post.category.title }}</a> •
+            <span>Article</span>
         </div>
-    </div>
+        <div class="post-title-section">
+            <h1>{{ post.title }}</h1>
+            <div class="post-meta">
+                <span class="meta-item">
+                    <span>Published:</span> {{ post.created_at|date:"F d, Y \a\t g:i A" }}
+                </span>
+                <span class="meta-item">
+                    <span>Read Time:</span> {{ read_time }} minute{{ read_time|pluralize }}
+                </span>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -791,8 +796,10 @@
                 </a>
                 <a href="https://x.com/intent/post?url={{ request.build_absolute_uri }}&text={{ post.title }}"
                     target="_blank" class="share-btn share-twitter" title="Share on X">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false" fill="currentColor">
-                        <path d="M18.244 2H21l-6.52 7.455L22 22h-6.778l-4.8-6.258L4.8 22H2l7.06-8.066L2 2h6.938l4.356 5.77L18.244 2zm-1.19 18h1.64L7.03 4h-1.7l11.724 16z"/>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16"
+                        aria-hidden="true" focusable="false" fill="currentColor">
+                        <path
+                            d="M18.244 2H21l-6.52 7.455L22 22h-6.778l-4.8-6.258L4.8 22H2l7.06-8.066L2 2h6.938l4.356 5.77L18.244 2zm-1.19 18h1.64L7.03 4h-1.7l11.724 16z" />
                     </svg>
                 </a>
                 <a href="mailto:?subject={{ post.title }}&body={{ request.build_absolute_uri }}"
@@ -876,9 +883,12 @@
                     <div class="social-icons" style="display: flex; gap: 8px;">
                         {% if post.author.userprofile.twitter_url %}
                         <a href="{{ post.author.userprofile.twitter_url }}" target="_blank"
-                            style="width: 30px; height: 30px; background: #eef4ff; color: #000; display: flex; align-items: center; justify-content: center; border-radius: 4px; text-decoration: none;" title="X (Twitter)">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false" fill="currentColor">
-                                <path d="M18.244 2H21l-6.52 7.455L22 22h-6.778l-4.8-6.258L4.8 22H2l7.06-8.066L2 2h6.938l4.356 5.77L18.244 2zm-1.19 18h1.64L7.03 4h-1.7l11.724 16z"/>
+                            style="width: 30px; height: 30px; background: #eef4ff; color: #000; display: flex; align-items: center; justify-content: center; border-radius: 4px; text-decoration: none;"
+                            title="X (Twitter)">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16"
+                                aria-hidden="true" focusable="false" fill="currentColor">
+                                <path
+                                    d="M18.244 2H21l-6.52 7.455L22 22h-6.778l-4.8-6.258L4.8 22H2l7.06-8.066L2 2h6.938l4.356 5.77L18.244 2zm-1.19 18h1.64L7.03 4h-1.7l11.724 16z" />
                             </svg>
                         </a>
                         {% endif %}

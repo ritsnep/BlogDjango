@@ -13,12 +13,23 @@
         {% endblock %} RiteshNepali
     </title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Nunito&display=swap');
+        /* Typography Imports */
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Lora:ital,wght@0,400;0,700;1,400&family=Open+Sans:wght@400;600&display=swap');
 
         body {
-            font-family: 'Nunito', sans-serif;
+            font-family: 'Open Sans', sans-serif;
             padding-top: 70px;
-            /* Adjust based on navbar height */
+            color: #333;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
         }
 
         @media screen and (max-width: 1023px) {
@@ -58,7 +69,7 @@
             transition: width 0.1s ease-out;
         }
 
-        /* Search Overlay Styling */
+        /* Search Overlay */
         .search-overlay {
             position: absolute;
             top: 100%;
@@ -151,7 +162,7 @@
             display: flex;
         }
 
-        /* Navbar dropdown styling */
+        /* Navbar dropdown */
         .navbar-dropdown-container {
             position: relative;
             display: flex;
@@ -239,6 +250,8 @@
             color: #333;
             text-decoration: none;
             transition: color 0.3s, background-color 0.3s;
+            font-family: 'Montserrat', sans-serif;
+            letter-spacing: -0.2px;
         }
 
         .navbar-item:hover {
@@ -276,7 +289,7 @@
 
         @media (max-width: 1023px) {
 
-            /* Navbar brand adjustments */
+            /* Navbar mobile adjustments */
             .navbar-brand {
                 padding: 0.75rem 1rem;
                 display: flex;
@@ -293,7 +306,7 @@
                 font-size: 1rem !important;
             }
 
-            /* Burger menu styling */
+            /* Burger menu */
             .navbar-burger {
                 height: 3.25rem;
                 width: 3.25rem;
@@ -340,7 +353,7 @@
                 transform: translateY(-5px) rotate(-45deg);
             }
 
-            /* Mobile menu container */
+            /* Mobile menu */
             .navbar-menu {
                 display: none;
                 background-color: white;
@@ -354,12 +367,12 @@
                 overflow-y: auto;
             }
 
-            /* Navbar start - menu items container */
+            /* Navbar menu items */
             .navbar-start {
                 padding: 0.5rem 0 !important;
             }
 
-            /* Dropdown containers in mobile */
+            /* Mobile dropdown containers */
             .navbar-dropdown-container {
                 display: block;
                 width: 100%;
@@ -386,7 +399,7 @@
                 transition: transform 0.3s;
             }
 
-            /* Dropdown menu in mobile */
+            /* Mobile dropdown menu */
             .navbar-dropdown-menu {
                 position: static;
                 opacity: 0;
@@ -413,7 +426,7 @@
                 transform: rotate(180deg);
             }
 
-            /* Dropdown items in mobile */
+            /* Mobile dropdown items */
             .navbar-dropdown-item {
                 padding: 0.75rem 2rem !important;
                 font-size: 0.9rem !important;
@@ -426,7 +439,7 @@
                 border-left-color: #3273dc;
             }
 
-            /* Regular navbar items (like Newsletter) */
+            /* Mobile navbar items */
             .navbar-item {
                 width: 100%;
                 padding: 1rem 1.5rem !important;
@@ -460,7 +473,7 @@
                 bottom: -3px;
             }
 
-            /* Footer responsive styles */
+            /* Footer responsive */
             footer .columns {
                 display: flex;
                 flex-direction: column;
