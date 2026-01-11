@@ -1,6 +1,6 @@
 {% extends 'core/base.html' %}
 {% block title %}
-{{category.title}} |
+{{ category.title }} |
 {% endblock %}
 {% block content %}
 
@@ -16,8 +16,9 @@
     }
 
     .page-header h1 {
+        font-family: 'Montserrat', sans-serif;
         font-size: 2.2rem;
-        font-weight: bold;
+        font-weight: 800;
         color: #222;
         margin-bottom: 0.5rem;
         line-height: 1.3;
@@ -65,8 +66,9 @@
     }
 
     .article-content h2 {
+        font-family: 'Montserrat', sans-serif;
         font-size: 1.3rem;
-        font-weight: bold;
+        font-weight: 800;
         color: #222;
         margin: 0 0 0.8rem 0;
         line-height: 1.4;
@@ -82,6 +84,7 @@
     }
 
     .article-category {
+        font-family: 'Montserrat', sans-serif;
         display: inline-block;
         font-size: 0.7rem;
         background: #f0f0f0;
@@ -89,7 +92,7 @@
         padding: 0.3rem 0.6rem;
         border-radius: 3px;
         margin-bottom: 0.8rem;
-        font-weight: 600;
+        font-weight: 700;
         text-transform: uppercase;
     }
 
@@ -168,14 +171,15 @@
         <article class="article-item">
             <a href="{% url 'post_detail' post.category.slug post.slug %}" class="article-thumbnail">
                 {% if post.image %}
-                    <img src="{{ post.get_image_url }}" alt="{{ post.title }}">
+                <img src="{{ post.get_image_url }}" alt="{{ post.title }}">
                 {% else %}
-                    <div style="width: 100%; height: 100%; background: #e0e0e0; display: flex; align-items: center; justify-content: center;">
-                        <span style="color: #999;">No Image</span>
-                    </div>
+                <div
+                    style="width: 100%; height: 100%; background: #e0e0e0; display: flex; align-items: center; justify-content: center;">
+                    <span style="color: #999;">No Image</span>
+                </div>
                 {% endif %}
             </a>
-            
+
             <div class="article-content">
                 <div>
                     <a href="{% url 'category_detail' post.category.slug %}">
@@ -188,13 +192,13 @@
                 </div>
                 <div class="article-meta">
                     <div class="meta-item">
-                        👤 <strong>{{ post.category.title }}</strong>
+                        👤 <strong><span>{{ post.author.get_full_name|default:post.author.username }}</span></strong>
                     </div>
                     <div class="meta-item">
-                        📅 {{ post.created_at|date:"M d, Y" }}
+                        📅 <span>{{ post.created_at|date:"M d, Y" }}</span>
                     </div>
                     <div class="meta-item">
-                        ⏱️ {{ post.created_at|timesince }} ago
+                        ⏱️ <span>{{ post.created_at|timesince }} ago</span>
                     </div>
                 </div>
             </div>

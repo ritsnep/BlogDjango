@@ -30,6 +30,7 @@ Home |
     }
 
     .featured-label {
+        font-family: 'Montserrat', sans-serif;
         font-size: 1.15rem;
         font-weight: 800;
         letter-spacing: 0.8px;
@@ -53,6 +54,7 @@ Home |
     }
 
     .featured-content h1 {
+        font-family: 'Montserrat', sans-serif;
         font-size: 2.22rem;
         margin: 0 0 1rem 0;
         line-height: 1.25;
@@ -136,6 +138,7 @@ Home |
     }
 
     .article-card-info h3 {
+        font-family: 'Montserrat', sans-serif;
         font-size: 1.1rem;
         font-weight: 800;
         color: #000;
@@ -337,6 +340,7 @@ Home |
     }
 
     .news-label {
+        font-family: 'Montserrat', sans-serif;
         font-size: 1.15rem;
         font-weight: 800;
         letter-spacing: 0.8px;
@@ -379,6 +383,7 @@ Home |
     }
 
     .news-item-content h3 {
+        font-family: 'Montserrat', sans-serif;
         font-size: 1rem;
         font-weight: 800;
         margin: 0 0 0.35rem 0;
@@ -395,6 +400,7 @@ Home |
     }
 
     .category-tag {
+        font-family: 'Montserrat', sans-serif;
         display: inline-block;
         font-size: 0.75rem;
         color: #666;
@@ -420,6 +426,7 @@ Home |
     }
 
     .column-label {
+        font-family: 'Montserrat', sans-serif;
         font-size: 1.15rem;
         font-weight: 800;
         letter-spacing: 0.8px;
@@ -472,8 +479,9 @@ Home |
     }
 
     .article-row-content h3 {
+        font-family: 'Montserrat', sans-serif;
         font-size: 1.15rem;
-        font-weight: 700;
+        font-weight: 800;
         margin: 0 0 0.3rem 0;
         line-height: 1.3;
         color: #000;
@@ -495,6 +503,7 @@ Home |
     }
 
     .see-all-button {
+        font-family: 'Montserrat', sans-serif;
         display: inline-block;
         margin-top: 2.5rem;
         padding: 0.7rem 1.4rem;
@@ -533,10 +542,12 @@ Home |
     }
 
     .section-title {
+        font-family: 'Montserrat', sans-serif;
         font-size: 1.8rem;
         font-weight: 800;
         margin-bottom: 2rem;
         color: #000;
+        line-height: 1.3;
     }
 
     .section-title span {
@@ -552,6 +563,7 @@ Home |
     }
 
     .tab-item {
+        font-family: 'Montserrat', sans-serif;
         font-size: 0.85rem;
         font-weight: 700;
         text-transform: uppercase;
@@ -612,8 +624,9 @@ Home |
     }
 
     .guide-card h3 {
+        font-family: 'Montserrat', sans-serif;
         font-size: 1.1rem;
-        font-weight: 700;
+        font-weight: 800;
         margin-bottom: 0.5rem;
         line-height: 1.4;
     }
@@ -633,6 +646,7 @@ Home |
     }
 
     .expert-content h4 {
+        font-family: 'Montserrat', sans-serif;
         text-transform: uppercase;
         font-size: 0.75rem;
         font-weight: 700;
@@ -641,9 +655,11 @@ Home |
     }
 
     .expert-content h2 {
+        font-family: 'Montserrat', sans-serif;
         font-size: 2.2rem;
         font-weight: 800;
         margin-bottom: 1.5rem;
+        line-height: 1.2;
     }
 
     .expert-content p {
@@ -658,6 +674,7 @@ Home |
     }
 
     .stat-item h3 {
+        font-family: 'Montserrat', sans-serif;
         font-size: 1.5rem;
         font-weight: 800;
         color: #3273dc;
@@ -710,9 +727,11 @@ Home |
     }
 
     .newsletter-full h2 {
+        font-family: 'Montserrat', sans-serif;
         font-size: 2rem;
         font-weight: 800;
         margin-bottom: 1rem;
+        line-height: 1.3;
     }
 
     .newsletter-full p {
@@ -736,11 +755,12 @@ Home |
     }
 
     .newsletter-form-wide button {
+        font-family: 'Montserrat', sans-serif;
         background: #3273dc;
         color: white;
         border: none;
         padding: 1rem 2rem;
-        font-weight: 700;
+        font-weight: 800;
         border-radius: 0 4px 4px 0;
         cursor: pointer;
         font-size: 1rem;
@@ -771,6 +791,7 @@ Home |
     }
 
     .top-articles-col h2 {
+        font-family: 'Montserrat', sans-serif;
         font-size: 0.9rem;
         text-transform: uppercase;
         font-weight: 800;
@@ -1150,7 +1171,7 @@ Home |
                     <h1>{{ featured_post.title }}</h1>
                 </a>
                 <p>{{ featured_post.intro }}</p>
-                <div class="featured-meta">{{ featured_post.author.get_full_name|default:featured_post.author.username }} • {{ featured_post.created_at|date:"M d, Y" }}</div>
+                <div class="featured-meta"><span>{{ featured_post.author.get_full_name|default:featured_post.author.username }}</span> • <span>{{ featured_post.created_at|date:"M d, Y" }}</span></div>
             </div>
             {% endif %}
         </div>
@@ -1175,7 +1196,7 @@ Home |
                     <div class="news-item-content">
                         <div class="category-tag">{{ post.category.title }}</div>
                         <h3>{{ post.title }}</h3>
-                        <div class="news-item-meta">{{ post.author.get_full_name|default:post.author.username }} - {{ post.created_at|date:"M d, Y" }}</div>
+                        <div class="news-item-meta"><span>{{ post.author.get_full_name|default:post.author.username }}</span> - <span>{{ post.created_at|date:"M d, Y" }}</span></div>
                     </div>
                 </a>
                 {% endfor %}
@@ -1227,7 +1248,7 @@ Home |
                     <div class="article-row-content">
                         <div class="category-tag">{{ post.category.title }}</div>
                         <h3>{{ post.title }}</h3>
-                        <div class="article-row-meta">{{ post.author.get_full_name|default:post.author.username }} - {{ post.created_at|date:"M d, Y" }}</div>
+                        <div class="article-row-meta"><span>{{ post.author.get_full_name|default:post.author.username }}</span> - <span>{{ post.created_at|date:"M d, Y" }}</span></div>
                     </div>
                 </a>
                 {% endfor %}
@@ -1256,7 +1277,7 @@ Home |
                     <div class="article-row-content">
                         <div class="category-tag">{{ post.category.title }}</div>
                         <h3>{{ post.title }}</h3>
-                        <div class="article-row-meta">{{ post.author.get_full_name|default:post.author.username }} - {{ post.created_at|date:"M d, Y" }}</div>
+                        <div class="article-row-meta"><span>{{ post.author.get_full_name|default:post.author.username }}</span> - <span>{{ post.created_at|date:"M d, Y" }}</span></div>
                     </div>
                 </a>
                 {% endfor %}
