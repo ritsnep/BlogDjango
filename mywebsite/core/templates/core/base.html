@@ -13,12 +13,13 @@
         {% endblock %} RiteshNepali
     </title>
     <style>
-        /* Typography Imports */
+        /* Font Typography */
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800;900&family=Roboto:wght@400;500;700&display=swap');
 
         body {
             font-family: 'Roboto', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-            padding-top: 70px;
+            background-color: #f9f9f9;
+            padding-top: 60px;
             color: #1a202c;
             line-height: 1.5;
         }
@@ -36,7 +37,7 @@
 
         @media screen and (max-width: 1023px) {
             body {
-                padding-top: 60px;
+                padding-top: 50px;
                 /* Adjust for mobile if needed */
             }
         }
@@ -137,7 +138,7 @@
             cursor: pointer;
             font-size: 1rem;
             color: #333;
-            padding: 0.5rem 0.6rem;
+            padding: 0.4rem 0.6rem;
             display: flex;
             align-items: center;
             gap: 0.2rem;
@@ -152,19 +153,17 @@
 
         .navbar-brand {
             min-height: auto;
-            padding: 1rem;
+            padding: 0.75rem;
         }
 
-        .navbar-menu {
-            padding: 0;
-        }
+        /* Navigation Menu Styles */
 
         .navbar-end {
             align-items: stretch;
             display: flex;
         }
 
-        /* Navbar dropdown */
+        /* Navbar Dropdown Elements */
         .navbar-dropdown-container {
             position: relative;
             display: flex;
@@ -174,7 +173,7 @@
         }
 
         .navbar-dropdown-toggle {
-            padding: 0.75rem 0.6rem;
+            padding: 0.4rem 0.6rem;
             display: flex;
             align-items: center;
             gap: 0.3rem;
@@ -214,16 +213,16 @@
             padding: 0.5rem 0;
         }
 
-        @media (min-width: 1024px) {
-            .navbar-menu {
-                display: flex !important;
-            }
+        /* Desktop Navigation Media Query */
+        .navbar-menu {
+            display: flex !important;
+        }
 
-            .navbar-dropdown-container:hover .navbar-dropdown-menu {
-                opacity: 1;
-                visibility: visible;
-                transform: translateY(0);
-            }
+        .navbar-dropdown-container:hover .navbar-dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
         }
 
         .navbar-dropdown-item {
@@ -234,16 +233,31 @@
             font-size: 0.95rem;
             transition: all 0.3s;
             white-space: nowrap;
+            position: relative;
+        }
+
+        .navbar-dropdown-item::before {
+            content: ">";
+            color: #3273dc;
+            font-weight: 900;
+            margin-right: 0.6rem;
+            display: inline-block;
+            transition: transform 0.3s;
         }
 
         .navbar-dropdown-item:hover {
             background-color: #f5f5f5;
             color: #3273dc;
-            padding-left: 2rem;
+            padding-left: 1.8rem;
+        }
+
+        .navbar-dropdown-item:hover::before {
+            transform: translateX(3px);
+            color: #3273dc;
         }
 
         .navbar-item {
-            padding: 0.75rem 0.6rem;
+            padding: 0.4rem 0.6rem;
             height: 100%;
             display: flex;
             align-items: center;
@@ -291,9 +305,9 @@
 
         @media (max-width: 1023px) {
 
-            /* Navbar mobile adjustments */
+            /* Mobile/Tablet Menu Adjustments */
             .navbar-brand {
-                padding: 0.75rem 1rem;
+                padding: 0.5rem 1rem;
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
@@ -308,10 +322,10 @@
                 font-size: 1rem !important;
             }
 
-            /* Burger menu */
+            /* Burger & Global Toggles */
             .navbar-burger {
-                height: 3.25rem;
-                width: 3.25rem;
+                height: 2.75rem;
+                width: 2.75rem;
                 margin-left: auto;
                 display: flex;
                 flex-direction: column;
@@ -355,7 +369,7 @@
                 transform: translateY(-5px) rotate(-45deg);
             }
 
-            /* Mobile menu */
+            /* Mobile Specific Menu Styling */
             .navbar-menu {
                 display: none;
                 background-color: white;
@@ -491,9 +505,6 @@
             }
         }
 
-        body {
-            overflow-x: hidden;
-        }
 
         nav.navbar {
             /* overflow-x: hidden removed to allow dropdowns to show */
@@ -532,7 +543,7 @@
     <nav class="navbar">
         <div class="container" style="width: 100%; max-width: none;">
             <div class="navbar-brand">
-                <a class="navbar-item" href="/" style="padding: 1rem;">
+                <a class="navbar-item" href="/" style="padding: 0.5rem 0.75rem;">
                     <strong style="font-size: 1.2rem; color: #3273dc;">Ritesh Nepali's Blogs</strong>
                 </a>
                 <span class="navbar-burger burger" data-target="navbarMenu">
@@ -561,7 +572,9 @@
                         <button class="navbar-dropdown-toggle">SEO <i class="fa fa-caret-down"
                                 style="font-size: 0.7rem;"></i></button>
                         <ul class="navbar-dropdown-menu">
-                            <li><a href="/SEO/what-is-seo/" class="navbar-dropdown-item">What is SEO?</a></li>
+                            <li><a href="/SEO/what-is-seo/" class="navbar-dropdown-item">What Is SEO?</a></li>
+                            <li><a href="/SEO/google-algorithm-updates/" class="navbar-dropdown-item">Google Algorithm
+                                    Updates</a></li>
                             <li><a href="/SEO/Keyword-Research" class="navbar-dropdown-item">Keyword Research</a></li>
                             <li><a href="/SEO/on-page-seo" class="navbar-dropdown-item">On-Page SEO</a></li>
                             <li><a href="/SEO/technical-seo" class="navbar-dropdown-item">Technical SEO</a></li>
@@ -587,6 +600,7 @@
                         <button class="navbar-dropdown-toggle">AI SEO <i class="fa fa-caret-down"
                                 style="font-size: 0.7rem;"></i></button>
                         <ul class="navbar-dropdown-menu">
+                            <li><a href="/" class="navbar-dropdown-item">All AI SEO</a></li>
                             <li><a href="/" class="navbar-dropdown-item">AI Overview</a></li>
                             <li><a href="/" class="navbar-dropdown-item">ChatGPT</a></li>
                             <li><a href="/" class="navbar-dropdown-item">Generative AI</a></li>

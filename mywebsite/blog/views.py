@@ -28,12 +28,16 @@ def detail(request, category_slug, slug):
     word_count = len(post.body.split())
     read_time = max(1, word_count // 200)
 
+    # Get categories for sidebar
+    categories = Category.objects.all()[:3]
+
     return render(request,'blog/detail.html',{
         'post':post,
         'form':form,
         'related_posts':related_posts,
         'read_time':read_time,
-        'category':post.category
+        'category':post.category,
+        'categories': categories
     })
 
 # View posts by category
@@ -99,11 +103,18 @@ def author_detail(request, username):
     author = get_object_or_404(User, username=username)
     posts = author.posts.filter(status=Post.ACTIVE).order_by('-created_at')
     
+    # Get distinct categories that this author has written about
+    author_categories = Category.objects.filter(
+        posts__author=author,
+        posts__status=Post.ACTIVE
+    ).distinct().order_by('title')
+    
     paginator = Paginator(posts, 12)
     page_number = request.GET.get('page')
     page_posts = paginator.get_page(page_number)
     
     return render(request, 'blog/author_detail.html', {
         'author': author,
-        'posts': page_posts
+        'posts': page_posts,
+        'categories': author_categories
     })

@@ -1,142 +1,634 @@
 {% extends 'core/base.html' %}
-{% block title %}{{ author.get_full_name|default:author.username }} - Profile | {% endblock %}
+{% block title %}{{ author.get_full_name|default:author.username }} - Author Profile | {% endblock %}
 
 {% block content %}
-<section class="section">
-    <div class="container">
-        <div class="columns">
+<style>
+    /* Container & Layout */
+    .author-container {
+        max-width: 1440px;
+        margin: 0 auto;
+        padding: 2rem 1.5rem;
+    }
 
-            <!-- Left Sidebar -->
-            <div class="column is-3-desktop is-4-tablet">
-                <div class="author-sidebar has-text-centered p-4" style="background: #fff;">
-                    <!-- Profile Image with 'Staff' Badge approximation -->
-                    <div class="position-relative mb-4" style="position: relative; display: inline-block; width: 100%;">
-                        <figure class="image is-square"
-                            style="border-radius: 8px; overflow: hidden; border: 1px solid #ddd;">
-                            <img src="{{ author.userprofile.get_image_url }}" alt="{{ author.username }}"
-                                style="object-fit: cover;">
-                        </figure>
-                        {% if author.userprofile.role %}
-                        <span class="tag is-info"
-                            style="position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); border-radius: 12px; padding: 0 1rem; font-weight: 600; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">
-                            {{ author.userprofile.role }}
-                        </span>
-                        {% endif %}
-                    </div>
+    .author-grid {
+        display: grid;
+        grid-template-columns: 280px 1fr 280px;
+        gap: 2rem;
+        align-items: flex-start;
+    }
 
-                    <h1 class="title is-3 mb-5"
-                        style="font-family: 'Montserrat', sans-serif; font-weight: 800; line-height: 1.2;">
-                        {{ author.get_full_name|default:author.username }}
-                    </h1>
+    /* Sidebar Components */
+    .sidebar-left,
+    .sidebar-right {
+        position: sticky;
+        top: 100px;
+    }
 
-                    {% if author.userprofile.get_contact_email %}
-                    <a href="mailto:{{ author.userprofile.get_contact_email }}" class="button is-dark is-fullwidth mb-5"
-                        style="background-color: #222; font-weight: 600;">
-                        Email {{ author.get_full_name|default:author.username }}
-                    </a>
+    /* Profile Bio Components */
+    .profile-box {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        border: 1px solid #eef2f6;
+        text-align: center;
+        margin-bottom: 1.5rem;
+    }
+
+    .profile-image-container {
+        position: relative;
+        display: inline-block;
+        width: 180px;
+        height: 180px;
+        margin-bottom: 1.5rem;
+    }
+
+    .profile-image-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 8px;
+        border: 1px solid #ddd;
+    }
+
+    .staff-badge {
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #0860c0;
+        color: white;
+        font-size: 0.75rem;
+        font-weight: 800;
+        padding: 4px 15px;
+        border-radius: 20px;
+        text-transform: uppercase;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    }
+
+    .author-name-title h1 {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 1.75rem;
+        font-weight: 900;
+        color: #1a1a1a;
+        margin-bottom: 0.5rem;
+        line-height: 1.1;
+    }
+
+    .author-role {
+        font-family: 'Roboto', sans-serif;
+        color: #666;
+        font-size: 1rem;
+        margin-bottom: 1.5rem;
+        display: block;
+    }
+
+    .btn-email {
+        background: #1a1a1a;
+        color: white !important;
+        width: 100%;
+        padding: 0.8rem;
+        border-radius: 6px;
+        font-weight: 700;
+        text-align: center;
+        display: block;
+        transition: background 0.2s;
+        text-decoration: none;
+    }
+
+    .btn-email:hover {
+        background: #000;
+    }
+
+    /* Social & Connection UI */
+    .sidebar-section {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        border: 1px solid #eef2f6;
+        margin-bottom: 1.5rem;
+    }
+
+    .sidebar-section-title {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.95rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        color: #1a1a1a;
+        margin-bottom: 1.5rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid #e2e8f0;
+        letter-spacing: 0.5px;
+        position: relative;
+    }
+
+    .sidebar-section-title::after {
+        content: '';
+        position: absolute;
+        bottom: -1px;
+        left: 0;
+        width: 40px;
+        height: 2px;
+        background: #3273dc;
+    }
+
+    .connect-icons {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+    }
+
+    .connect-icons a {
+        font-size: 1.5rem;
+        color: #0860c0;
+        transition: color 0.2s;
+    }
+
+    .connect-icons a:hover {
+        color: #3273dc;
+    }
+
+    /* Professional Badges & Tags */
+    .exp-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .exp-tag {
+        background: #eff6ff;
+        color: #3b82f6;
+        padding: 0.2rem 0.6rem;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 800;
+    }
+
+    /* Article List Formatting */
+    .about-author-header {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 2.25rem;
+        font-weight: 900;
+        margin-bottom: 1.5rem;
+        color: #1a1a1a;
+    }
+
+    .author-bio {
+        font-family: 'Roboto', sans-serif;
+        font-size: 1.1rem;
+        line-height: 1.7;
+        color: #333;
+        margin-bottom: 2.5rem;
+    }
+
+    .related-topics {
+        margin-bottom: 3rem;
+    }
+
+    .topic-btn {
+        display: inline-block;
+        background: #3273dc;
+        color: white !important;
+        padding: 10px 20px;
+        border-radius: 4px;
+        font-weight: 700;
+        font-size: 0.9rem;
+        margin-right: 10px;
+        margin-bottom: 10px;
+        transition: all 0.2s;
+        text-decoration: none;
+    }
+
+    .topic-btn:hover {
+        background: #2563eb;
+    }
+
+    .latest-articles-title {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 1.5rem;
+        font-weight: 900;
+        margin-bottom: 2rem;
+        color: #1a1a1a;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 1rem;
+    }
+
+    .author-post-card {
+        display: grid;
+        grid-template-columns: 200px 1fr;
+        gap: 1.5rem;
+        margin-bottom: 2.5rem;
+        padding-bottom: 2.5rem;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .author-post-image {
+        width: 200px;
+        height: 135px;
+        border-radius: 6px;
+        overflow: hidden;
+    }
+
+    .author-post-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .author-post-category {
+        font-weight: 700;
+        color: #666;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        margin-bottom: 0.5rem;
+        display: block;
+    }
+
+    .author-post-category a {
+        color: #666;
+        text-decoration: none;
+    }
+
+    .author-post-category a:hover {
+        color: #3273dc;
+    }
+
+    .author-post-title {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 1.25rem;
+        font-weight: 800;
+        margin-bottom: 0.75rem;
+        line-height: 1.3;
+    }
+
+    .author-post-title a {
+        color: #1a1a1a;
+        text-decoration: none;
+    }
+
+    .author-post-title a:hover {
+        color: #0860c0;
+    }
+
+    .author-post-excerpt {
+        color: #444;
+        font-size: 1rem;
+        line-height: 1.5;
+        margin-bottom: 1rem;
+    }
+
+    .author-post-meta {
+        font-size: 0.85rem;
+        color: #888;
+    }
+
+    /* Reuse sidebar styles from detail.html */
+    .sidebar-box {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        border: 1px solid #eef2f6;
+        margin-bottom: 1.5rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .sidebar-box:not(.newsletter-widget):not(.ad-widget)::before {
+        display: none;
+    }
+
+    .sidebar-title {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.95rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        color: #1a202c;
+        margin-bottom: 1.5rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid #e2e8f0;
+        letter-spacing: 0.5px;
+        position: relative;
+        display: inline-block;
+        width: 100%;
+    }
+
+    .sidebar-title::after {
+        content: '';
+        position: absolute;
+        bottom: -1px;
+        left: 0;
+        width: 40px;
+        height: 2px;
+        background: #3273dc;
+    }
+
+    .newsletter-widget {
+        background: linear-gradient(180deg, #2a58bd 0%, #3b82f6 100%);
+        color: white;
+        text-align: center;
+        border: none;
+        box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);
+        padding: 2rem 1.5rem;
+    }
+
+    .newsletter-widget .sidebar-title {
+        color: white;
+        border-bottom: none;
+        font-size: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .newsletter-widget .sidebar-title::after {
+        left: 50%;
+        transform: translateX(-50%);
+        width: 40px;
+        background: rgba(255, 255, 255, 0.5);
+    }
+
+    .newsletter-form {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .newsletter-form input {
+        padding: 0.9rem 1.2rem;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 8px;
+        font-size: 0.95rem;
+        background: rgba(0, 0, 0, 0.1);
+        color: white;
+        width: 100%;
+        box-sizing: border-box;
+        transition: all 0.3s;
+    }
+
+    .newsletter-form input::placeholder {
+        color: rgba(255, 255, 255, 0.6);
+    }
+
+    .newsletter-form button {
+        padding: 1rem;
+        background: white;
+        color: #1e3a8a;
+        border: none;
+        border-radius: 8px;
+        font-weight: 900;
+        cursor: pointer;
+        transition: all 0.3s;
+        text-transform: uppercase;
+        font-size: 0.9rem;
+        letter-spacing: 1px;
+    }
+
+    .newsletter-form button:hover {
+        background: #f8fafc;
+        transform: scale(1.02);
+    }
+
+    .ad-widget {
+        background: #f4faff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 200px;
+        border: 1px dashed #d0e7ff;
+        color: #94a8bc;
+        font-weight: 700;
+        font-size: 0.9rem;
+        position: relative;
+    }
+
+    .ad-widget::before {
+        content: 'ADVERTISEMENT';
+        position: absolute;
+        top: 0.75rem;
+        right: 0.75rem;
+        font-size: 0.65rem;
+        font-weight: 800;
+        color: #3b82f6;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        background: #eef7ff;
+        padding: 3px 8px;
+        border-radius: 4px;
+        border: 1px solid rgba(59, 130, 246, 0.1);
+    }
+
+    .category-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .category-item {
+        border-bottom: 1px solid #f1f5f9;
+        transition: background 0.2s;
+    }
+
+    .category-item:last-child {
+        border-bottom: none;
+    }
+
+    .category-item a {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 0;
+        color: #475569;
+        text-decoration: none;
+        transition: all 0.2s;
+        font-weight: 700;
+        font-size: 0.9rem;
+    }
+
+    .category-item a:hover {
+        color: #3273dc;
+        padding-left: 5px;
+    }
+
+    .category-count {
+        background: #eff6ff;
+        color: #3b82f6;
+        padding: 0.2rem 0.6rem;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 800;
+    }
+
+    .category-item a:hover .category-count {
+        background: #3b82f6;
+        color: white;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 1100px) {
+        .author-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .sidebar-right {
+            display: none;
+        }
+
+        .sidebar-left {
+            position: static;
+            max-width: 600px;
+            margin: 0 auto 2rem;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .author-post-card {
+            grid-template-columns: 1fr;
+        }
+
+        .author-post-image {
+            width: 100%;
+            height: 200px;
+        }
+
+        .profile-image-container {
+            width: 150px;
+            height: 150px;
+        }
+    }
+</style>
+
+<div class="author-container">
+    <div class="author-grid">
+        <!-- LEFT SIDEBAR -->
+        <aside class="sidebar-left">
+            <div class="profile-box">
+                <div class="profile-image-container">
+                    {% if author.userprofile.profile_image %}
+                    <img src="{{ author.userprofile.profile_image.url }}" alt="{{ author.username }}">
+                    {% else %}
+                    <img src="https://ui-avatars.com/api/?name={{ author.username }}&background=0D8ABC&color=fff"
+                        alt="{{ author.username }}">
                     {% endif %}
+                    {% if author.userprofile.role %}
+                    <span class="staff-badge">{{ author.userprofile.role }}</span>
+                    {% endif %}
+                </div>
+                <div class="author-name-title">
+                    <h1>{{ author.get_full_name|default:author.username }}</h1>
+                    <span class="author-role">{{ author.userprofile.role|default:"Contributor" }}</span>
+                </div>
+                {% if author.email %}
+                <a href="mailto:{{ author.email }}" class="btn-email">Email</a>
+                {% endif %}
+            </div>
 
-                    <!-- Social Media Large Icons -->
-                    <div class="buttons is-centered are-medium">
-                        {% if author.userprofile.linkedin_url %}
-                        <a href="{{ author.userprofile.linkedin_url }}" target="_blank"
-                            class="button is-white has-text-link">
-                            <span class="icon is-large"><i class="fa fa-linkedin fa-2x"></i></span>
-                        </a>
-                        {% endif %}
-                        {% if author.userprofile.twitter_url %}
-                        <a href="{{ author.userprofile.twitter_url }}" target="_blank"
-                            class="button is-white has-text-info">
-                            <span class="icon is-large"><i class="fa fa-twitter fa-2x"></i></span>
-                        </a>
-                        {% endif %}
-                        {% if author.userprofile.website_url %}
-                        <a href="{{ author.userprofile.website_url }}" target="_blank"
-                            class="button is-white has-text-grey">
-                            <span class="icon is-large"><i class="fa fa-globe fa-2x"></i></span>
-                        </a>
-                        {% endif %}
-                    </div>
+            <div class="sidebar-section">
+                <h3 class="sidebar-section-title">Connect</h3>
+                <div class="connect-icons">
+                    {% if author.userprofile.linkedin_url %}
+                    <a href="{{ author.userprofile.linkedin_url }}" target="_blank"><i
+                            class="fa fa-linkedin-square"></i></a>
+                    {% endif %}
+                    {% if author.userprofile.twitter_url %}
+                    <a href="{{ author.userprofile.twitter_url }}" target="_blank"><i class="fa fa-twitter"></i></a>
+                    {% endif %}
+                    {% if author.userprofile.website_url %}
+                    <a href="{{ author.userprofile.website_url }}" target="_blank"><i class="fa fa-rss"></i></a>
+                    {% endif %}
+                </div>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content">
+            <h2 class="about-author-header">About {{ author.get_full_name|default:author.username }}</h2>
+            <div class="author-bio">
+                {{ author.userprofile.bio|linebreaks }}
+            </div>
+
+            <div class="related-topics">
+                <h3 class="sidebar-section-title">Related topics</h3>
+                <div class="topic-buttons">
+                    {% for cat in categories %}
+                    <a href="{% url 'category_detail' cat.slug %}" class="topic-btn">{{ cat.title }}</a>
+                    {% endfor %}
                 </div>
             </div>
 
-            <!-- Right Content -->
-            <div class="column is-9-desktop is-8-tablet pl-6-desktop">
+            <section class="latest-articles">
+                <h3 class="latest-articles-title">{{ author.get_full_name|default:author.username }}'s latest articles
+                </h3>
 
-                <!-- About Section -->
-                <section class="mb-6">
-                    <h2 class="title is-2 mb-4" style="font-family: 'Montserrat', sans-serif; font-weight: 800;">About
-                        {{ author.get_full_name|default:author.username }}</h2>
-                    <div class="content is-medium" style="color: #444; line-height: 1.8;">
-                        {{ author.userprofile.bio|linebreaks }}
-                    </div>
-                </section>
-
-                <hr style="background-color: #eee; height: 1px; margin: 3rem 0;">
-
-                <!-- Latest Articles List -->
-                <section>
-                    <h3 class="title is-4 mb-5" style="font-family: 'Montserrat', sans-serif; font-weight: 800;">{{ author.get_full_name|default:author.username }}'s latest articles</h3>
-
-                    <div class="articles-list">
-                        {% for post in posts %}
-                        <article class="media mb-6" style="border-bottom: 1px solid #f5f5f5; padding-bottom: 2rem;">
-                            <figure class="media-left">
-                                <p class="image is-128x128" style="overflow: hidden; border-radius: 4px;">
-                                    <a href="{% url 'post_detail' post.category.slug post.slug %}">
-                                        {% if post.image %}
-                                        <img src="{{ post.get_image_url }}" alt="{{ post.title }}"
-                                            style="object-fit: cover; height: 100%;">
-                                        {% else %}
-                                        <div
-                                            style="background: #eee; height: 100%; display: flex; align-items: center; justify-content: center; color: #999;">
-                                            img</div>
-                                        {% endif %}
-                                    </a>
-                                </p>
-                            </figure>
-                            <div class="media-content">
-                                <div class="content">
-                                    <p class="mb-1">
-                                        <span class="has-text-grey is-uppercase is-size-7"
-                                            style="font-weight: 600; letter-spacing: 0.5px;">{{ post.category.title }}</span>
-                                    </p>
-                                    <h4 class="title is-4 mb-2">
-                                        <a href="{% url 'post_detail' post.category.slug post.slug %}"
-                                            style="color: #000; text-decoration: none;">
-                                            {{ post.title }}
-                                        </a>
-                                    </h4>
-                                    <p class="mb-2" style="color: #555;">
-                                        {{ post.intro|truncatewords:20 }}
-                                    </p>
-                                    <p class="is-size-7 has-text-grey">
-                                        <span style="color: #666;">{{ author.get_full_name|default:author.username }}</span> | {{ post.created_at|date:"F d, Y" }} at {{ post.created_at|date:"g:i a" }}
-                                    </p>
-                                </div>
+                {% for post in posts %}
+                <article class="author-post-card">
+                    <div class="author-post-image">
+                        <a href="{% url 'post_detail' post.category.slug post.slug %}">
+                            {% if post.image %}
+                            <img src="{{ post.get_image_url }}" alt="{{ post.title }}">
+                            {% else %}
+                            <div
+                                style="background: #f0f0f0; height: 100%; display: flex; align-items: center; justify-content: center; color: #ccc;">
+                                <i class="fa fa-image fa-3x"></i>
                             </div>
-                        </article>
-                        {% empty %}
-                        <div class="notification is-light">
-                            No articles found for this author.
-                        </div>
-                        {% endfor %}
+                            {% endif %}
+                        </a>
                     </div>
+                    <div class="author-post-content">
+                        <span class="author-post-category">
+                            <a href="{% url 'category_detail' post.category.slug %}">{{ post.category.title }}</a>
+                        </span>
+                        <h4 class="author-post-title">
+                            <a href="{% url 'post_detail' post.category.slug post.slug %}">{{ post.title }}</a>
+                        </h4>
+                        <p class="author-post-excerpt">{{ post.intro|truncatewords:40 }}</p>
+                        <div class="author-post-meta">
+                            {{ author.get_full_name|default:author.username }} | {{ post.created_at|date:"M d, Y" }} at
+                            {{ post.created_at|date:"g:i a" }}
+                        </div>
+                    </div>
+                </article>
+                {% empty %}
+                <p style="text-align: center; color: #888; padding: 3rem 0;">No articles found for this author.</p>
+                {% endfor %}
 
-                    <!-- Pagination -->
-                    {% if posts.paginator.num_pages > 1 %}
-                    <nav class="pagination is-centered mt-5" role="navigation" aria-label="pagination">
-                        {% if posts.has_previous %}
-                        <a href="?page={{ posts.previous_page_number }}" class="pagination-previous">Previous</a>
-                        {% endif %}
-                        {% if posts.has_next %}
-                        <a href="?page={{ posts.next_page_number }}" class="pagination-next">Next page</a>
-                        {% endif %}
-                    </nav>
+                <!-- Pagination -->
+                {% if posts.paginator.num_pages > 1 %}
+                <nav class="pagination is-centered" role="navigation" aria-label="pagination" style="margin-top: 3rem;">
+                    {% if posts.has_previous %}
+                    <a href="?page={{ posts.previous_page_number }}" class="pagination-previous"
+                        style="padding: 0.75rem 1.5rem; background: #f5f5f5; border-radius: 6px; text-decoration: none; color: #333; font-weight: 600;">Previous</a>
                     {% endif %}
-                </section>
+                    {% if posts.has_next %}
+                    <a href="?page={{ posts.next_page_number }}" class="pagination-next"
+                        style="padding: 0.75rem 1.5rem; background: #3273dc; border-radius: 6px; text-decoration: none; color: white; font-weight: 600;">Next
+                        page</a>
+                    {% endif %}
+                </nav>
+                {% endif %}
+            </section>
+        </main>
+
+        <!-- RIGHT SIDEBAR -->
+        <aside class="sidebar-right">
+            <!-- Advertisement -->
+            <div class="sidebar-box ad-widget">
+                <span style="font-weight: 600; color: #bbb; letter-spacing: 1px;">ADS PLACEHOLDER</span>
             </div>
-        </div>
+
+            <!-- Newsletter Signup -->
+            <div class="sidebar-box newsletter-widget">
+                <div class="sidebar-title">Join The Newsletter</div>
+                <p style="font-size: 0.95rem; color: rgba(255,255,255,0.9); margin-bottom: 1.5rem; line-height: 1.5;">
+                    Get weekly insights, tips, and exclusive content delivered straight to your inbox.
+                </p>
+                <form class="newsletter-form">
+                    <input type="email" placeholder="Your email address" required>
+                    <button type="submit">Subscribe</button>
+                </form>
+            </div>
+
+
+        </aside>
     </div>
-</section>
+</div>
 {% endblock %}
