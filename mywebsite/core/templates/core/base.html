@@ -161,6 +161,8 @@
         .navbar-end {
             align-items: stretch;
             display: flex;
+            margin-right: 3rem;
+            /* Moved further left */
         }
 
         /* Navbar Dropdown Elements */
@@ -232,7 +234,8 @@
             padding: 0.65rem 1.25rem 0.65rem 1rem;
             color: #333;
             text-decoration: none;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
+            /* Reduced from 0.9rem */
             transition: all 0.2s ease;
             white-space: nowrap;
             position: relative;
@@ -265,7 +268,8 @@
             display: flex;
             align-items: center;
             font-weight: 600;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
+            /* Reduced from 0.95rem */
             color: #333;
             text-decoration: none;
             transition: color 0.3s, background-color 0.3s;
@@ -471,6 +475,29 @@
                 background-color: #f9f9f9;
             }
 
+            /* Responsive Buttons Fix */
+            .navbar-item .buttons {
+                display: flex;
+                flex-direction: column;
+                width: 100%;
+                margin: 0 !important;
+                /* Prevent Bulma negative margin overflow */
+            }
+
+            .navbar-item .buttons .button {
+                width: 100%;
+                margin-bottom: 0.5rem;
+                margin-right: 0 !important;
+                display: flex;
+                justify-content: center;
+                box-sizing: border-box;
+                /* Ensure padding doesn't add to width */
+            }
+
+            .navbar-item .buttons .button:last-child {
+                margin-bottom: 0;
+            }
+
             /* Hide search toggle on mobile */
             .search-overlay,
             .search-toggle-btn {
@@ -536,6 +563,26 @@
             .navbar-menu.is-active {
                 width: 100vw;
                 margin-left: calc(50% - 50vw);
+            }
+        }
+
+        /* Responsive SEO Button Text */
+        .seo-text-short {
+            display: none;
+        }
+
+        .seo-text-long {
+            display: inline;
+        }
+
+        /* Show short text on intermediate desktop screens where overflow happens */
+        @media (min-width: 1024px) and (max-width: 1350px) {
+            .seo-text-long {
+                display: none;
+            }
+
+            .seo-text-short {
+                display: inline;
             }
         }
     </style>
@@ -689,6 +736,25 @@
                 </div>
 
                 <div class="navbar-end">
+                    <div class="navbar-item">
+                        <div class="buttons">
+                            <button class="button is-info is-small" onclick="alert('Coming soon!')">
+                                <strong>
+                                    <span class="seo-text-long">Analyze your site's SEO</span>
+                                    <span class="seo-text-short">Analyze SEO</span>
+                                </strong>
+                            </button>
+                            <a href="{% url 'create_post' %}" class="button is-primary is-small">
+                                <strong>Write for us</strong>
+                            </a>
+                            {% if user.is_authenticated %}
+                            <form action="{% url 'logout' %}" method="post" style="display: inline-flex;">
+                                {% csrf_token %}
+                                <button type="submit" class="button is-light is-small">Log out</button>
+                            </form>
+                            {% endif %}
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -780,6 +846,18 @@
                         <li style="margin-bottom: 0.6rem;">
                             <a href="/sitemap.xml"
                                 style="color: #bdc3c7; text-decoration: none; transition: color 0.3s;">Sitemap</a>
+                        </li>
+                        <li style="margin-bottom: 0.6rem;">
+                            <a href="{% url 'create_post' %}"
+                                style="color: #bdc3c7; text-decoration: none; transition: color 0.3s;">Write for us</a>
+                        </li>
+                        <li style="margin-bottom: 0.6rem;">
+                            <a href="{% url 'signup' %}"
+                                style="color: #bdc3c7; text-decoration: none; transition: color 0.3s;">Sign Up</a>
+                        </li>
+                        <li style="margin-bottom: 0.6rem;">
+                            <a href="{% url 'login' %}"
+                                style="color: #bdc3c7; text-decoration: none; transition: color 0.3s;">Login</a>
                         </li>
                     </ul>
                 </div>

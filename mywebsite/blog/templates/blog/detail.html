@@ -1318,6 +1318,141 @@
             padding-right: 5px;
         }
     }
+
+    /* CKEditor Content Styles */
+    .article-body figure.image {
+        display: table;
+        margin: 1.5rem auto;
+        clear: both;
+        text-align: center;
+    }
+
+    .article-body figure.image img {
+        display: block;
+        margin: 0 auto;
+        max-width: 100%;
+        height: auto;
+        border-radius: 6px;
+    }
+
+    .article-body figure.image figcaption {
+        display: table-caption;
+        caption-side: bottom;
+        background: #f9f9f9;
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+        color: #555;
+        text-align: center;
+        border-bottom: 2px solid #eee;
+        font-style: italic;
+    }
+
+    /* Alignment Classes from CKEditor 5 */
+    .article-body .image-style-side {
+        float: right;
+        margin-left: 2rem;
+        max-width: 50%;
+    }
+
+    .article-body .image-style-align-left {
+        float: left;
+        margin-right: 2rem;
+        margin-bottom: 1rem;
+    }
+
+    .article-body .image-style-align-right {
+        float: right;
+        margin-left: 2rem;
+        margin-bottom: 1rem;
+    }
+
+    .article-body .image-style-align-center {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    /* Text Alignment */
+    .article-body .text-align-left {
+        text-align: left;
+    }
+
+    .article-body .text-align-right {
+        text-align: right;
+    }
+
+    .article-body .text-align-center {
+        text-align: center;
+    }
+
+    .article-body .text-align-justify {
+        text-align: justify;
+    }
+
+    /* Clearfloats */
+    .article-body::after {
+        content: "";
+        display: table;
+        clear: both;
+    }
+
+    /* Responsive adjustment for floating images */
+    @media (max-width: 768px) {
+
+        .article-body .image-style-side,
+        .article-body .image-style-align-left,
+        .article-body .image-style-align-right {
+            float: none;
+            margin: 1.5rem auto;
+            max-width: 100%;
+        }
+    }
+
+    /* Category Tag Styling */
+    .category-tag {
+        display: inline-block;
+        background-color: #eef4ff;
+        color: #3273dc;
+        padding: 0.35rem 0.85rem;
+        border-radius: 6px;
+        font-size: 0.8rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 1rem;
+    }
+
+    /* Intro Styling - Clean & Professional */
+    .article-intro {
+        font-family: 'Georgia', 'Times New Roman', serif;
+        /* Serif for intro often looks more editorial/professional */
+        font-size: 1.3rem;
+        line-height: 1.8;
+        color: #2c3e50;
+        margin-bottom: 2.5rem;
+        font-weight: 400;
+        font-style: italic;
+        padding-bottom: 1.5rem;
+        border-bottom: 1px solid #eaeaea;
+        /* Subtle separator */
+    }
+
+    /* List Rendering */
+    .article-body ul {
+        list-style: disc;
+        margin-left: 2rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .article-body ol {
+        list-style: decimal;
+        margin-left: 2rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .article-body li {
+        margin-bottom: 0.5rem;
+        padding-left: 0.25rem;
+    }
 </style>
 
 <div class="detail-header">

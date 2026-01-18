@@ -9,8 +9,9 @@ from django.contrib import admin
 from django.urls import include, path
 
 
+from django.contrib.auth import views as auth_views
 from .sitemaps import CategorySitemap, PostSitemap
-from core.views import frontpage, about, robot_txt, test_404, meet_the_team, sitemap_html, sitemap_xml
+from core.views import frontpage, about, robot_txt, test_404, meet_the_team, sitemap_html, sitemap_xml, signup
 
 
 
@@ -22,6 +23,11 @@ urlpatterns = [
     path('sitemap.xml', sitemap_xml, name='django.contrib.sitemaps.views.sitemap'),
     path('sitemap/', sitemap_html, name='sitemap_html'),
     path('admin/', admin.site.urls),
+    # Auth
+    path('signup/', signup, name='signup'),
+    path('login/', auth_views.LoginView.as_view(template_name='core/login.html'), name='login'),
+    path('logout/', auth_views.LogoutView.as_view(), name='logout'),
+    
     path('',frontpage, name='frontpage'),
     path('about/',about, name='about'),
     path('team/', meet_the_team, name='meet_the_team'),

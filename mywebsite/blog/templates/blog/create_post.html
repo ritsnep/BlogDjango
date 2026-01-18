@@ -1,0 +1,449 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Editor | {% endblock %}
+
+{% block content %}
+<style>
+    /* WordPress-like Editor Styles */
+    body {
+        background-color: #f1f1f1;
+        /* Light grey background like WP */
+    }
+
+    .editor-container {
+        padding: 2rem 1.5rem;
+        /* Horizontal padding for mobile */
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+
+    /* Main Column */
+    .editor-main {
+        background: transparent;
+    }
+
+    .editor-card {
+        background: white;
+        border: 1px solid #ccd0d4;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+        /* Subtle shadow */
+        padding: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    /* Title Input */
+    .title-input {
+        width: 100%;
+        border: none;
+        font-size: 2.5rem;
+        font-weight: 700;
+        font-family: 'Montserrat', sans-serif;
+        color: #2c3e50;
+        outline: none;
+        padding: 0.5rem 0;
+        background: transparent;
+        border-bottom: 1px solid transparent;
+        transition: border 0.3s;
+    }
+
+    .title-input::placeholder {
+        color: #ddd;
+    }
+
+    .title-input:focus {
+        border-bottom-color: #e2e8f0;
+        box-shadow: none;
+    }
+
+    /* Intro Input */
+    .intro-input {
+        width: 100%;
+        border: none;
+        font-size: 1.1rem;
+        color: #555;
+        font-family: 'Open Sans', sans-serif;
+        resize: none;
+        outline: none;
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+        background: transparent;
+        border-left: 3px solid #eee;
+        padding-left: 1rem;
+    }
+
+    .intro-input:focus {
+        border-left-color: #3273dc;
+        box-shadow: none;
+    }
+
+    /* Sidebar Panels */
+    .sidebar-panel {
+        background: white;
+        border: 1px solid #ccd0d4;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+        margin-bottom: 1.5rem;
+    }
+
+    .panel-header {
+        padding: 1rem 1.25rem;
+        border-bottom: 1px solid #f0f0f0;
+        font-weight: 700;
+        font-size: 0.95rem;
+        color: #23282d;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .panel-body {
+        padding: 1.25rem;
+    }
+
+    /* Form Elements */
+    .label-small {
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: #646970;
+        margin-bottom: 0.4rem;
+        display: block;
+    }
+
+    /* Publish Button */
+    .btn-publish {
+        width: 100%;
+        background-color: #2271b1;
+        /* WP Blue */
+        border-color: #2271b1;
+        color: white;
+        font-weight: 600;
+    }
+
+    .btn-publish:hover {
+        background-color: #135e96;
+        color: white;
+    }
+
+    /* Tabs override for sidebar */
+    .image-tabs {
+        margin-bottom: 1rem;
+    }
+
+    .image-tabs ul {
+        justify-content: center;
+    }
+
+    .image-tabs a {
+        padding: 0.5rem 1rem;
+        font-size: 0.85rem;
+    }
+</style>
+
+<div class="editor-container">
+    <div class="level mb-4">
+        <div class="level-left">
+            <a href="{% url 'my_posts' %}" class="button is-text has-text-grey">
+                <span class="icon"><i class="fa fa-arrow-left"></i></span>
+                <span>Back to Dashboard</span>
+            </a>
+        </div>
+    </div>
+    <form method="post" action="." enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.media }}
+
+        <div class="columns is-variable is-2 is-desktop">
+
+            <!-- LEFT COLUMN: Content Editor -->
+            <div class="column is-9">
+
+                {% if form.errors %}
+                <div class="notification is-danger is-light mb-5">
+                    <button class="delete"></button>
+                    {{ form.non_field_errors }}
+                </div>
+                {% endif %}
+
+                <div class="editor-card">
+                    <!-- Title -->
+                    <div class="field">
+                        {{ form.title }}
+                        <!-- We assume form widget has 'input' class, we add unique styling via CSS selector if possible, 
+                             or JS/Widget attr. But here I will use CSS on the generated input class if generic, 
+                             or better: Wrap it and target input. -->
+                        {% if form.title.errors %}
+                        <p class="help is-danger">{{ form.title.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+
+                    <!-- Intro -->
+                    <div class="field">
+                        {{ form.intro }}
+                        {% if form.intro.errors %}
+                        <p class="help is-danger">{{ form.intro.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+
+                    <!-- Body (CKEditor) -->
+                    <div class="field mt-5">
+                        {{ form.body }}
+                        {% if form.body.errors %}
+                        <p class="help is-danger">{{ form.body.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- SEO SETTINGS PANEL -->
+                <div class="editor-card mt-5" style="border-top: 4px solid #3273dc;">
+                    <h3 class="title is-5 mb-4 has-text-weight-bold">Search Engine Optimization</h3>
+                    <div class="columns">
+                        <div class="column is-6">
+                            <label class="label-small mb-2">Google Preview</label>
+                            <!-- Fake Google Result -->
+                            <div
+                                style="background: white; border: 1px solid #dfe1e5; border-radius: 8px; padding: 15px;">
+                                <div style="display: flex; align-items: center; margin-bottom: 6px;">
+                                    <div
+                                        style="width: 28px; height: 28px; background: #f1f3f4; border-radius: 50%; margin-right: 12px;">
+                                    </div>
+                                    <div>
+                                        <div style="font-size: 14px; color: #202124;">Ritesh Nepali's Blogs</div>
+                                        <div style="font-size: 12px; color: #5f6368;" id="seo-preview-url">
+                                            https://mysite.com/...</div>
+                                    </div>
+                                </div>
+                                <div style="font-size: 20px; color: #1a0dab; margin-bottom: 4px; line-height: 1.3;"
+                                    id="seo-preview-title">Article Title Example</div>
+                                <div style="font-size: 14px; color: #4d5156; line-height: 1.58;" id="seo-preview-desc">
+                                    Please enter an introduction to see how it looks in search results...
+                                </div>
+                            </div>
+                        </div>
+                        <div class="column is-6">
+                            <div class="notification is-info is-light">
+                                <p class="is-size-7"><strong>SEO Tip:</strong> Ensure your title is catchy and your
+                                    summary
+                                    (intro) includes your main keywords.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="column is-3">
+                <div class="sidebar-wrapper" style="position: sticky; top: 90px;">
+
+                    <!-- 1. Publish Panel -->
+                    <div class="sidebar-panel">
+                        <div class="panel-header">
+                            <span>Publish</span>
+                        </div>
+                        <div class="panel-body">
+                            <div class="field mb-4">
+                                <label class="label-small">Status</label>
+                                <div class="control">
+                                    <div class="select is-fullwidth is-small">
+                                        {{ form.status }}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Permalink -->
+                            <div class="field mb-4">
+                                <label class="label-small">Permalink</label>
+                                <div class="control">
+                                    {{ form.slug }}
+                                </div>
+                                <p class="help has-text-grey-light" style="font-size: 0.7rem;">Leave empty to
+                                    auto-generate.
+                                </p>
+                            </div>
+
+                            <div class="field mt-4">
+                                <button type="submit" class="button btn-publish">Publish</button>
+                            </div>
+                            <div class="has-text-centered mt-2">
+                                <a href="{% url 'frontpage' %}"
+                                    style="font-size: 0.85rem; color: #d63638; text-decoration: underline;">Move to
+                                    Trash
+                                    (Cancel)</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 2. Categories Panel -->
+                    <div class="sidebar-panel">
+                        <div class="panel-header">
+                            <span>Category</span>
+                        </div>
+                        <div class="panel-body">
+                            <div class="field">
+                                <div class="control">
+                                    <div class="select is-fullwidth">
+                                        {{ form.category }}
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="help has-text-grey-light" style="font-size: 0.75rem;">Select a relevant category.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- 3. Featured Image Panel -->
+                    <div class="sidebar-panel">
+                        <div class="panel-header">
+                            <span>Featured Image</span>
+                        </div>
+                        <div class="panel-body">
+                            <!-- Tiny Tabs -->
+                            <div class="tabs is-toggle is-fullwidth is-small image-tabs">
+                                <ul>
+                                    <li class="is-active" id="tab-upload">
+                                        <a onclick="switchImageTab('upload')">
+                                            <span>Upload</span>
+                                        </a>
+                                    </li>
+                                    <li id="tab-url">
+                                        <a onclick="switchImageTab('url')">
+                                            <span>URL</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <!-- Upload -->
+                            <div id="image-input-upload">
+                                <div class="file has-name is-boxed is-small is-fullwidth">
+                                    <label class="file-label">
+                                        {{ form.image }}
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- URL -->
+                            <div id="image-input-url" class="is-hidden">
+                                <div class="control">
+                                    {{ form.image_url }}
+                                </div>
+                            </div>
+
+                            <p class="help has-text-grey-light mt-2" style="font-size: 0.75rem;">Set the primary image
+                                for
+                                this post.</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </form>
+</div>
+
+<script>
+    function switchImageTab(tabName) {
+        document.getElementById('tab-upload').classList.remove('is-active');
+        document.getElementById('tab-url').classList.remove('is-active');
+        document.getElementById('tab-' + tabName).classList.add('is-active');
+
+        const uploadField = document.getElementById('image-input-upload');
+        const urlField = document.getElementById('image-input-url');
+
+        if (tabName === 'upload') {
+            uploadField.classList.remove('is-hidden');
+            urlField.classList.add('is-hidden');
+        } else {
+            uploadField.classList.add('is-hidden');
+            urlField.classList.remove('is-hidden');
+        }
+    }
+
+    // Live SEO Preview Update
+    function updateSEO() {
+        // Title
+        let titleInput = document.querySelector('input[name="title"]');
+        let title = titleInput ? titleInput.value : "";
+        if (!title) title = "Article Title Example";
+        document.getElementById('seo-preview-title').innerText = title;
+
+        // Slug/URL
+        let slugInput = document.querySelector('input[name="slug"]');
+        let slug = slugInput ? slugInput.value : "";
+        if (!slug && title !== "Article Title Example") {
+            slug = title.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '');
+        }
+        if (!slug) slug = "article-slug";
+        const hostname = window.location.hostname;
+        document.getElementById('seo-preview-url').innerText = "https://" + hostname + "/" + slug + "/";
+
+        // Desc
+        let introInput = document.querySelector('textarea[name="intro"]');
+        let intro = introInput ? introInput.value : "";
+        if (!intro) intro = "Please enter an introduction to see how it looks in search results...";
+        // Truncate if too long (simulated)
+        if (intro.length > 160) {
+            intro = intro.substring(0, 157) + "...";
+        }
+        document.getElementById('seo-preview-desc').innerText = intro;
+    }
+
+    // Apply specific classes to generic form widgets to match the design
+    document.addEventListener('DOMContentLoaded', () => {
+        // Find the title input (it has class 'input')
+        const titleInputs = document.querySelectorAll('input[name="title"]');
+        titleInputs.forEach(input => {
+            input.classList.remove('input', 'is-medium', 'is-small'); // Remove Bulma defaults
+            input.classList.add('title-input'); // Add our custom WP style
+            input.placeholder = "Add title";
+            input.addEventListener('input', updateSEO);
+        });
+
+        // Intro (textarea)
+        const introInputs = document.querySelectorAll('textarea[name="intro"]');
+        introInputs.forEach(input => {
+            input.classList.remove('textarea');
+            input.classList.add('intro-input');
+            input.rows = 2; // Make it smaller initially
+            input.placeholder = "Write a short excerpt...";
+
+            // Auto-resize
+            input.addEventListener('input', function () {
+                this.style.height = 'auto';
+                this.style.height = (this.scrollHeight) + 'px';
+            });
+        });
+
+        // Add Listeners for SEO (consolidated)
+        const inputs = [
+            document.querySelector('input[name="title"]'),
+            document.querySelector('input[name="slug"]'),
+            document.querySelector('textarea[name="intro"]'),
+            document.querySelector('select[name="category"]')
+        ];
+        inputs.forEach(el => {
+            if (el) {
+                el.addEventListener('input', updateSEO);
+                el.addEventListener('change', updateSEO);
+            }
+        });
+
+        // Slug input
+        const slugInputs = document.querySelectorAll('input[name="slug"]');
+        slugInputs.forEach(input => {
+            input.classList.add('input', 'is-small');
+            input.addEventListener('input', updateSEO);
+        });
+
+        // Initialize SEO Preview
+        updateSEO();
+
+        // Image URL input
+        const urlInput = document.querySelector('input[name="image_url"]');
+        if (urlInput) {
+            urlInput.classList.add('input', 'is-small');
+            urlInput.placeholder = "https://...";
+        }
+
+    });
+</script>
+{% endblock %}

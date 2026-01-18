@@ -1,0 +1,140 @@
+{% extends 'core/base.html' %}
+
+{% block title %}My Dashboard | {% endblock %}
+
+{% block content %}
+<div class="container section">
+    <div class="level">
+        <div class="level-left">
+            <h1 class="title is-3" style="font-family: 'Montserrat', sans-serif; font-weight: 700;">My Dashboard</h1>
+        </div>
+        <div class="level-right">
+            <a href="{% url 'create_post' %}" class="button is-primary is-medium">
+                <span class="icon"><i class="fa fa-pencil"></i></span>
+                <span>Write New Article</span>
+            </a>
+        </div>
+    </div>
+
+    <div class="box" style="margin-top: 2rem;">
+        <div class="tabs is-boxed is-medium mb-0">
+            <ul>
+                <li class="is-active" id="tab-active" onclick="openTab('active')">
+                    <a>
+                        <span class="icon is-small has-text-success"><i class="fa fa-check-circle"
+                                aria-hidden="true"></i></span>
+                        <span>Published ({{ active_posts.count }})</span>
+                    </a>
+                </li>
+                <li id="tab-draft" onclick="openTab('draft')">
+                    <a>
+                        <span class="icon is-small has-text-grey"><i class="fa fa-file-text-o"
+                                aria-hidden="true"></i></span>
+                        <span>Drafts ({{ draft_posts.count }})</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div
+            style="background: #fff; padding: 2rem; border: 1px solid #dbdbdb; border-top: none; border-radius: 0 0 6px 6px;">
+            <!-- Active Posts Table -->
+            <div id="content-active" class="content-tab">
+                {% if active_posts %}
+                <div class="table-container">
+                    <table class="table is-fullwidth is-hoverable is-striped">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Category</th>
+                                <th>Published</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for post in active_posts %}
+                            <tr>
+                                <td>
+                                    <a href="{% url 'post_detail' post.category.slug post.slug %}"
+                                        class="has-text-weight-bold has-text-dark">
+                                        {{ post.title }}
+                                    </a>
+                                </td>
+                                <td><span class="tag is-light is-info">{{ post.category.title }}</span></td>
+                                <td>{{ post.created_at|date:"M d, Y" }}</td>
+                                <td>
+                                    <div class="buttons are-small">
+                                        <a href="{% url 'post_detail' post.category.slug post.slug %}"
+                                            class="button is-light" title="View">
+                                            <i class="fa fa-eye"></i> View
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="notification is-light has-text-centered p-6">
+                    <p class="subtitle">You haven't published any articles yet.</p>
+                    <a href="{% url 'create_post' %}" class="button is-primary is-outlined">Write one now!</a>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Draft Posts Table -->
+            <div id="content-draft" class="content-tab is-hidden">
+                {% if draft_posts %}
+                <div class="table-container">
+                    <table class="table is-fullwidth is-hoverable">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Category</th>
+                                <th>Created</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for post in draft_posts %}
+                            <tr>
+                                <td>
+                                    <span class="has-text-weight-semibold">{{ post.title }}</span>
+                                </td>
+                                <td><span class="tag is-light">{{ post.category.title }}</span></td>
+                                <td>{{ post.created_at|date:"M d, Y" }}</td>
+                                <td>
+                                    <!-- Placeholder for edit functionality -->
+                                    <button class="button is-small is-disabled"
+                                        title="Editing coming soon">Edit</button>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="notification is-light has-text-centered p-6">
+                    <p>No drafts found.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    function openTab(tabName) {
+        // Toggle Tabs
+        document.querySelectorAll('.tabs li').forEach(li => li.classList.remove('is-active'));
+        document.getElementById('tab-' + tabName).classList.add('is-active');
+
+        // Toggle Content
+        document.getElementById('content-active').classList.add('is-hidden');
+        document.getElementById('content-draft').classList.add('is-hidden');
+        document.getElementById('content-' + tabName).classList.remove('is-hidden');
+    }
+</script>
+{% endblock %}

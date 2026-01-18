@@ -1,10 +1,41 @@
 from django.db.models import Q, Count
 from django.conf import settings
 from django.shortcuts import get_object_or_404, redirect, render
+from django.contrib.auth.decorators import login_required
+from django.utils.text import slugify
 from django.core.paginator import Paginator
 from django.contrib.auth.models import User
-from .forms import CommentForm
+from .forms import CommentForm, PostForm
 from .models import Post,Category
+
+@login_required
+def create_post(request):
+    if request.method == 'POST':
+        form = PostForm(request.POST, request.FILES)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.author = request.user
+            
+            # Use provided slug or generate from title
+            if form.cleaned_data.get('slug'):
+                post.slug = form.cleaned_data['slug']
+            else:
+                post.slug = slugify(post.title)
+            
+            # Ensure unique slug
+            original_slug = post.slug
+            count = 1
+            while Post.objects.filter(slug=post.slug).exists():
+                post.slug = f"{original_slug}-{count}"
+                count += 1
+            
+            post.save()
+            form.save() # Handles m2m and image_url logic from Form.save() method
+            return redirect('post_detail', category_slug=post.category.slug, slug=post.slug)
+    else:
+        form = PostForm()
+    
+    return render(request, 'blog/create_post.html', {'form': form})
 
 # View post detail and handle comments
 def detail(request, category_slug, slug):
@@ -117,4 +148,15 @@ def author_detail(request, username):
         'author': author,
         'posts': page_posts,
         'categories': author_categories
+    })
+
+@login_required
+def my_posts(request):
+    posts = Post.objects.filter(author=request.user).order_by('-created_at')
+    active_posts = posts.filter(status=Post.ACTIVE)
+    draft_posts = posts.filter(status=Post.DRAFT)
+    
+    return render(request, 'blog/my_posts.html', {
+        'active_posts': active_posts, 
+        'draft_posts': draft_posts
     })

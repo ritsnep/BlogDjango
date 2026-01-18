@@ -1,0 +1,145 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Log In | {% endblock %}
+
+{% block content %}
+<style>
+    .auth-container {
+        min-height: calc(100vh - 150px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #f8fafc;
+        padding: 2rem 1rem;
+    }
+
+    .auth-card {
+        width: 100%;
+        max-width: 420px;
+        background: white;
+        padding: 2.5rem;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+        border: 1px solid #e2e8f0;
+    }
+
+    .auth-title {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 800;
+        font-size: 1.75rem;
+        color: #1e293b;
+        margin-bottom: 0.5rem;
+        text-align: center;
+    }
+
+    .auth-subtitle {
+        color: #64748b;
+        text-align: center;
+        margin-bottom: 2rem;
+        font-size: 0.95rem;
+    }
+
+    .input-field-label {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: #475569;
+        margin-bottom: 0.5rem;
+        display: block;
+    }
+
+    .input.custom-input {
+        height: 3rem;
+        border-radius: 6px;
+        border-color: #e2e8f0;
+        box-shadow: none;
+        transition: all 0.2s;
+        font-size: 0.95rem;
+    }
+
+    .input.custom-input:focus {
+        border-color: #3273dc;
+        box-shadow: 0 0 0 3px rgba(50, 115, 220, 0.1);
+    }
+
+    .btn-auth {
+        height: 3rem;
+        font-weight: 700;
+        font-size: 1rem;
+        border-radius: 6px;
+        background-color: #3273dc;
+        color: white;
+        border: none;
+        width: 100%;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+
+    .btn-auth:hover {
+        background-color: #2366d1;
+    }
+
+    .auth-footer {
+        text-align: center;
+        margin-top: 1.5rem;
+        font-size: 0.9rem;
+        color: #64748b;
+    }
+
+    .auth-footer a {
+        color: #3273dc;
+        font-weight: 600;
+        text-decoration: none;
+    }
+
+    .auth-footer a:hover {
+        text-decoration: underline;
+    }
+</style>
+
+<div class="auth-container">
+    <div class="auth-card">
+        <h1 class="auth-title">Welcome Back</h1>
+        <p class="auth-subtitle">Please enter your details to sign in.</p>
+
+        <form method="post" action=".">
+            {% csrf_token %}
+
+            {% if form.errors %}
+            <div class="notification is-danger is-light mb-4" style="font-size: 0.9rem; padding: 1rem;">
+                <p><strong>Oops!</strong> Please check your username and password.</p>
+            </div>
+            {% endif %}
+
+            <div class="field mb-4">
+                <label class="input-field-label">Username</label>
+                <div class="control has-icons-left">
+                    <input class="input custom-input" type="text" name="username" placeholder="e.g. johndoe" required>
+                    <span class="icon is-small is-left" style="height: 3rem;">
+                        <i class="fa fa-user" style="color: #94a3b8;"></i>
+                    </span>
+                </div>
+            </div>
+
+            <div class="field mb-5">
+                <label class="input-field-label">Password</label>
+                <div class="control has-icons-left">
+                    <input class="input custom-input" type="password" name="password" placeholder="••••••••" required>
+                    <span class="icon is-small is-left" style="height: 3rem;">
+                        <i class="fa fa-lock" style="color: #94a3b8;"></i>
+                    </span>
+                </div>
+                <!-- Optional: Forgot Password Link -->
+                <!-- <div style="text-align: right; margin-top: 0.5rem;">
+                    <a href="#" style="font-size: 0.85rem; color: #64748b;">Forgot password?</a>
+                </div> -->
+            </div>
+
+            <button class="btn-auth">Sign In</button>
+
+            <div class="auth-footer">
+                Don't have an account? <a href="{% url 'signup' %}">Sign up for free</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

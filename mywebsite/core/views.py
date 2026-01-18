@@ -1,11 +1,26 @@
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.db.models import Count
 from django.contrib.sitemaps.views import sitemap as sitemap_view
 from django.urls import reverse
+from django.contrib.auth import login
 from blog.models import Post, Category
 from mywebsite.sitemaps import CategorySitemap, PostSitemap, UserSitemap, StaticSitemap
 from .models import UserProfile
+from .forms import SignUpForm
+
+# User Registration
+def signup(request):
+    if request.method == 'POST':
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect('frontpage')
+    else:
+        form = SignUpForm()
+    
+    return render(request, 'core/signup.html', {'form': form})
 
 # Home page view with featured, latest, and trending posts
 def frontpage(request):
