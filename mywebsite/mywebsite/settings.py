@@ -106,7 +106,7 @@ STATICFILES_DIRS = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CKEDITOR_UPLOAD_PATH = "uploads/"
-SITE_NAME = "Ritesh Nepali's Blogs"
+SITE_NAME = "Search Signal Room"
 
 # CKEditor 5 configuration
 CKEDITOR_5_CONFIGS = {

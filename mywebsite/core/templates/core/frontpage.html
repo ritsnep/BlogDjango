@@ -16,6 +16,26 @@ Home |
         max-width: 1440px;
     }
 
+    /* Section Title Separators */
+    .featured-label,
+    .news-label,
+    .column-label,
+    .section-title {
+        border-bottom: 1px solid #e0e0e0;
+        padding-bottom: 0.5rem;
+        margin-bottom: 1.5rem;
+        display: block;
+        color: #0b1c34;
+        /* Dark Navy Text */
+    }
+
+    .featured-label::after,
+    .news-label::after,
+    .column-label::after,
+    .section-title::after {
+        display: none;
+    }
+
     /* TOP SECTION */
     .top-section {
         display: grid;
