@@ -4,187 +4,267 @@
 
 {% block content %}
 <style>
-    /* WordPress-like Editor Styles */
+    /* Modern Premium Editor Styles */
+    :root {
+        --primary-color: #2563eb;
+        /* Royal Blue */
+        --bg-surface: #f8fafc;
+        /* Slate 50 */
+        --border-subtle: #e2e8f0;
+        /* Slate 200 */
+        --text-main: #1e293b;
+        /* Slate 800 */
+        --text-muted: #64748b;
+        /* Slate 500 */
+    }
+
     body {
-        background-color: #f1f1f1;
-        /* Light grey background like WP */
+        background-color: var(--bg-surface);
+        font-family: 'Inter', system-ui, -apple-system, sans-serif;
     }
 
-    .editor-container {
-        padding: 2rem 1.5rem;
-        /* Horizontal padding for mobile */
-        max-width: 1400px;
-        margin: 0 auto;
-    }
-
-    /* Main Column */
-    .editor-main {
-        background: transparent;
-    }
-
-    .editor-card {
-        background: white;
-        border: 1px solid #ccd0d4;
-        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
-        /* Subtle shadow */
-        padding: 2rem;
-        margin-bottom: 2rem;
-    }
-
-    /* Title Input */
-    .title-input {
-        width: 100%;
-        border: none;
-        font-size: 2.5rem;
-        font-weight: 700;
-        font-family: 'Montserrat', sans-serif;
-        color: #2c3e50;
-        outline: none;
-        padding: 0.5rem 0;
-        background: transparent;
-        border-bottom: 1px solid transparent;
-        transition: border 0.3s;
-    }
-
-    .title-input::placeholder {
-        color: #ddd;
-    }
-
-    .title-input:focus {
-        border-bottom-color: #e2e8f0;
-        box-shadow: none;
-    }
-
-    /* Intro Input */
-    .intro-input {
-        width: 100%;
-        border: none;
-        font-size: 1.1rem;
-        color: #555;
-        font-family: 'Open Sans', sans-serif;
-        resize: none;
-        outline: none;
-        margin-top: 1rem;
-        margin-bottom: 1rem;
-        background: transparent;
-        border-left: 3px solid #eee;
-        padding-left: 1rem;
-    }
-
-    .intro-input:focus {
-        border-left-color: #3273dc;
-        box-shadow: none;
-    }
-
-    /* Sidebar Panels */
-    .sidebar-panel {
-        background: white;
-        border: 1px solid #ccd0d4;
-        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
-        margin-bottom: 1.5rem;
-    }
-
-    .panel-header {
-        padding: 1rem 1.25rem;
-        border-bottom: 1px solid #f0f0f0;
-        font-weight: 700;
-        font-size: 0.95rem;
-        color: #23282d;
+    /* Sticky Toolbar */
+    .editor-toolbar {
+        position: sticky;
+        top: 0;
+        z-index: 40;
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid var(--border-subtle);
+        padding: 1rem 2rem;
         display: flex;
         justify-content: space-between;
         align-items: center;
+        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
     }
 
-    .panel-body {
+    /* Layout */
+    .editor-wrapper {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 0 1.5rem;
+    }
+
+    .glass-card {
+        background: white;
+        border-radius: 16px;
+        border: 1px solid var(--border-subtle);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+        padding: 2.5rem;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .sidebar-card {
+        background: white;
+        border-radius: 12px;
+        border: 1px solid var(--border-subtle);
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+        margin-bottom: 1.5rem;
+        overflow: hidden;
+    }
+
+    .sidebar-header {
+        background: #fdfdfd;
+        padding: 1rem 1.25rem;
+        font-weight: 600;
+        font-size: 0.9rem;
+        color: var(--text-main);
+        border-bottom: 1px solid var(--border-subtle);
+        letter-spacing: 0.02em;
+    }
+
+    .sidebar-body {
         padding: 1.25rem;
     }
 
-    /* Form Elements */
-    .label-small {
-        font-size: 0.8rem;
-        font-weight: 600;
-        color: #646970;
-        margin-bottom: 0.4rem;
-        display: block;
+    /* Typography Inputs */
+    .input-title {
+        font-size: 2.75rem;
+        font-weight: 800;
+        color: var(--text-main);
+        border: none;
+        width: 100%;
+        outline: none;
+        background: transparent;
+        line-height: 1.2;
+        padding: 0;
+        margin-bottom: 1rem;
+        font-family: 'Montserrat', sans-serif;
     }
 
-    /* Publish Button */
-    .btn-publish {
+    .input-title::placeholder {
+        color: #cbd5e1;
+    }
+
+    .input-excerpt {
+        font-size: 1.25rem;
+        color: var(--text-muted);
+        border: none;
         width: 100%;
-        background-color: #2271b1;
-        /* WP Blue */
-        border-color: #2271b1;
-        color: white;
+        resize: none;
+        outline: none;
+        background: transparent;
+        line-height: 1.6;
+        font-style: italic;
+        border-left: 3px solid transparent;
+        padding-left: 0;
+        transition: all 0.3s;
+    }
+
+    .input-excerpt:focus {
+        border-left-color: var(--primary-color);
+        padding-left: 1rem;
+    }
+
+    /* SEO Preview Card */
+    .google-preview {
+        background: white;
+        border: 1px solid #dfe1e5;
+        border-radius: 8px;
+        padding: 16px;
+        font-family: arial, sans-serif;
+        box-shadow: 0 1px 6px rgba(32, 33, 36, 0.28);
+    }
+
+    .gp-cite {
+        font-size: 14px;
+        color: #202124;
+        line-height: 1.3;
+    }
+
+    .gp-url {
+        font-size: 12px;
+        color: #4d5156;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .gp-title {
+        font-size: 20px;
+        color: #1a0dab;
+        line-height: 1.3;
+        margin-top: 5px;
+        cursor: pointer;
+    }
+
+    .gp-title:hover {
+        text-decoration: underline;
+    }
+
+    .gp-desc {
+        font-size: 14px;
+        color: #4d5156;
+        line-height: 1.58;
+        margin-top: 3px;
+    }
+
+    /* Buttons */
+    .btn-action {
+        border-radius: 8px;
         font-weight: 600;
+        padding: 0.5rem 1.25rem;
+        transition: all 0.2s;
+    }
+
+    .btn-publish {
+        background: var(--primary-color);
+        color: white;
+        border: none;
     }
 
     .btn-publish:hover {
-        background-color: #135e96;
-        color: white;
+        background: #1d4ed8;
+        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
     }
 
-    /* Tabs override for sidebar */
-    .image-tabs {
-        margin-bottom: 1rem;
+    /* Custom Form Fields */
+    .custom-select-wrapper select {
+        border-radius: 8px;
+        border-color: var(--border-subtle);
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+        height: auto;
     }
 
-    .image-tabs ul {
-        justify-content: center;
+    /* File Upload */
+    .file-upload-modern {
+        border: 2px dashed var(--border-subtle);
+        border-radius: 8px;
+        padding: 1.5rem;
+        text-align: center;
+        background: #fcfcfc;
+        cursor: pointer;
+        transition: all 0.2s;
     }
 
-    .image-tabs a {
-        padding: 0.5rem 1rem;
-        font-size: 0.85rem;
+    .file-upload-modern:hover {
+        border-color: var(--primary-color);
+        background: #eff6ff;
     }
 </style>
 
-<div class="editor-container">
-    <div class="level mb-4">
+<form method="post" action="." enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.media }}
+
+    <!-- Sticky Toolbar -->
+    <div class="editor-toolbar">
         <div class="level-left">
-            <a href="{% url 'my_posts' %}" class="button is-text has-text-grey">
+            <a href="{% url 'my_posts' %}" class="button is-white has-text-grey-dark is-rounded">
                 <span class="icon"><i class="fa fa-arrow-left"></i></span>
-                <span>Back to Dashboard</span>
+                <span class="has-text-weight-semibold">Back</span>
             </a>
+            <div class="ml-4">
+                <span class="tag is-light is-medium" id="status-indicator">Draft Mode</span>
+            </div>
+        </div>
+        <div class="level-right">
+            <button type="submit" name="action" value="draft"
+                class="button is-white has-text-grey-dark btn-action mr-2">
+                <span class="icon is-small mr-1"><i class="fa fa-floppy-o"></i></span>
+                <span>Save Draft</span>
+            </button>
+            <button type="submit" name="action" value="publish" class="button btn-publish btn-action">
+                <span>Publish Now</span>
+                <span class="icon is-small ml-1"><i class="fa fa-paper-plane"></i></span>
+            </button>
         </div>
     </div>
-    <form method="post" action="." enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.media }}
 
-        <div class="columns is-variable is-2 is-desktop">
+    <!-- Main Content -->
+    <div class="editor-wrapper">
+        <div class="columns is-variable is-4">
 
-            <!-- LEFT COLUMN: Content Editor -->
-            <div class="column is-9">
+            <!-- Center Column: Writing Area -->
+            <div class="column is-8">
 
                 {% if form.errors %}
-                <div class="notification is-danger is-light mb-5">
+                <div class="notification is-danger is-light mb-5" style="border-radius: 12px;">
                     <button class="delete"></button>
                     {{ form.non_field_errors }}
                 </div>
                 {% endif %}
 
-                <div class="editor-card">
-                    <!-- Title -->
+                <div class="glass-card mb-5">
+                    <!-- Title Input -->
                     <div class="field">
                         {{ form.title }}
-                        <!-- We assume form widget has 'input' class, we add unique styling via CSS selector if possible, 
-                             or JS/Widget attr. But here I will use CSS on the generated input class if generic, 
-                             or better: Wrap it and target input. -->
                         {% if form.title.errors %}
                         <p class="help is-danger">{{ form.title.errors.0 }}</p>
                         {% endif %}
                     </div>
 
-                    <!-- Intro -->
-                    <div class="field">
+                    <!-- Intro Input -->
+                    <div class="field mt-4">
                         {{ form.intro }}
                         {% if form.intro.errors %}
                         <p class="help is-danger">{{ form.intro.errors.0 }}</p>
                         {% endif %}
                     </div>
 
-                    <!-- Body (CKEditor) -->
-                    <div class="field mt-5">
+                    <!-- Body Editor -->
+                    <div class="field mt-6">
                         {{ form.body }}
                         {% if form.body.errors %}
                         <p class="help is-danger">{{ form.body.errors.0 }}</p>
@@ -192,37 +272,45 @@
                     </div>
                 </div>
 
-                <!-- SEO SETTINGS PANEL -->
-                <div class="editor-card mt-5" style="border-top: 4px solid #3273dc;">
-                    <h3 class="title is-5 mb-4 has-text-weight-bold">Search Engine Optimization</h3>
-                    <div class="columns">
-                        <div class="column is-6">
-                            <label class="label-small mb-2">Google Preview</label>
-                            <!-- Fake Google Result -->
-                            <div
-                                style="background: white; border: 1px solid #dfe1e5; border-radius: 8px; padding: 15px;">
-                                <div style="display: flex; align-items: center; margin-bottom: 6px;">
-                                    <div
-                                        style="width: 28px; height: 28px; background: #f1f3f4; border-radius: 50%; margin-right: 12px;">
+                <!-- SEO Panel -->
+                <div class="sidebar-card">
+                    <div class="sidebar-header" style="background: linear-gradient(to right, #f8fafc, #fff);">
+                        <span class="icon-text">
+                            <span class="icon has-text-info"><i class="fa fa-google"></i></span>
+                            <span>Search Engine Preview</span>
+                        </span>
+                    </div>
+                    <div class="sidebar-body">
+                        <div class="columns">
+                            <div class="column is-7">
+                                <div class="google-preview">
+                                    <div class="mb-1" style="display: flex; align-items: center;">
+                                        <div style="margin-right: 12px;">
+                                            <img src="/media/favicon.png" alt="Favicon"
+                                                style="width: 26px; height: 26px; border-radius: 50%;">
+                                        </div>
+                                        <div>
+                                            <div class="gp-cite">Search Signal Room</div>
+                                            <div class="gp-url" id="seo-preview-url">https://mysite.com/...</div>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <div style="font-size: 14px; color: #202124;">Search Signal Room</div>
-                                        <div style="font-size: 12px; color: #5f6368;" id="seo-preview-url">
-                                            https://mysite.com/...</div>
-                                    </div>
-                                </div>
-                                <div style="font-size: 20px; color: #1a0dab; margin-bottom: 4px; line-height: 1.3;"
-                                    id="seo-preview-title">Article Title Example</div>
-                                <div style="font-size: 14px; color: #4d5156; line-height: 1.58;" id="seo-preview-desc">
-                                    Please enter an introduction to see how it looks in search results...
+                                    <div class="gp-title" id="seo-preview-title">Article Title Example</div>
+                                    <div class="gp-desc" id="seo-preview-desc">Enter a description to see the preview
+                                        here...</div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="column is-6">
-                            <div class="notification is-info is-light">
-                                <p class="is-size-7"><strong>SEO Tip:</strong> Ensure your title is catchy and your
-                                    summary
-                                    (intro) includes your main keywords.</p>
+                            <div class="column is-5">
+                                <div class="content is-small has-text-grey">
+                                    <p><strong>SEO Optimization</strong></p>
+                                    <p class="mb-2">Your title and intro are used to generate the snippet. Keep it under
+                                        160 characters for best visibility.</p>
+                                    <div class="field">
+                                        <label class="label is-small">Slug (URL)</label>
+                                        <div class="control">
+                                            {{ form.slug }}
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -230,220 +318,149 @@
 
             </div>
 
-            <div class="column is-3">
-                <div class="sidebar-wrapper" style="position: sticky; top: 90px;">
+            <!-- Right Column: Settings -->
+            <div class="column is-4">
+                <div style="position: sticky; top: 100px;">
 
-                    <!-- 1. Publish Panel -->
-                    <div class="sidebar-panel">
-                        <div class="panel-header">
-                            <span>Publish</span>
+                    <!-- Category Card -->
+                    <div class="sidebar-card">
+                        <div class="sidebar-header">
+                            Topic & Category
                         </div>
-                        <div class="panel-body">
-                            <div class="field mb-4">
-                                <label class="label-small">Status</label>
-                                <div class="control">
-                                    <div class="select is-fullwidth is-small">
-                                        {{ form.status }}
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Permalink -->
-                            <div class="field mb-4">
-                                <label class="label-small">Permalink</label>
-                                <div class="control">
-                                    {{ form.slug }}
-                                </div>
-                                <p class="help has-text-grey-light" style="font-size: 0.7rem;">Leave empty to
-                                    auto-generate.
-                                </p>
-                            </div>
-
-                            <div class="field mt-4">
-                                <button type="submit" class="button btn-publish">Publish</button>
-                            </div>
-                            <div class="has-text-centered mt-2">
-                                <a href="{% url 'frontpage' %}"
-                                    style="font-size: 0.85rem; color: #d63638; text-decoration: underline;">Move to
-                                    Trash
-                                    (Cancel)</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 2. Categories Panel -->
-                    <div class="sidebar-panel">
-                        <div class="panel-header">
-                            <span>Category</span>
-                        </div>
-                        <div class="panel-body">
+                        <div class="sidebar-body">
                             <div class="field">
-                                <div class="control">
+                                <label class="label is-small has-text-grey">Primary Category</label>
+                                <div class="control custom-select-wrapper">
                                     <div class="select is-fullwidth">
                                         {{ form.category }}
                                     </div>
                                 </div>
                             </div>
-                            <p class="help has-text-grey-light" style="font-size: 0.75rem;">Select a relevant category.
-                            </p>
                         </div>
                     </div>
 
-                    <!-- 3. Featured Image Panel -->
-                    <div class="sidebar-panel">
-                        <div class="panel-header">
-                            <span>Featured Image</span>
+                    <!-- Featured Image Card -->
+                    <div class="sidebar-card">
+                        <div class="sidebar-header">
+                            Featured Image
                         </div>
-                        <div class="panel-body">
-                            <!-- Tiny Tabs -->
-                            <div class="tabs is-toggle is-fullwidth is-small image-tabs">
+                        <div class="sidebar-body">
+                            <div class="tabs is-toggle is-fullwidth is-small mb-4">
                                 <ul>
-                                    <li class="is-active" id="tab-upload">
-                                        <a onclick="switchImageTab('upload')">
-                                            <span>Upload</span>
-                                        </a>
-                                    </li>
-                                    <li id="tab-url">
-                                        <a onclick="switchImageTab('url')">
-                                            <span>URL</span>
-                                        </a>
-                                    </li>
+                                    <li class="is-active" id="tab-upload"><a
+                                            onclick="switchImageTab('upload')">Upload</a></li>
+                                    <li id="tab-url"><a onclick="switchImageTab('url')">URL</a></li>
                                 </ul>
                             </div>
 
-                            <!-- Upload -->
                             <div id="image-input-upload">
-                                <div class="file has-name is-boxed is-small is-fullwidth">
-                                    <label class="file-label">
-                                        {{ form.image }}
-                                    </label>
+                                <div class="file-upload-modern"
+                                    onclick="document.querySelector('input[name=\'image\']').click()">
+                                    <span class="icon is-large has-text-grey-light mb-2"><i
+                                            class="fa fa-cloud-upload fa-2x"></i></span>
+                                    <p class="is-size-7 has-text-weight-bold has-text-grey">Click to Upload Image</p>
+                                    <div style="opacity: 0; position: absolute; pointer-events: none;">{{ form.image }}
+                                    </div>
                                 </div>
                             </div>
 
-                            <!-- URL -->
                             <div id="image-input-url" class="is-hidden">
-                                <div class="control">
-                                    {{ form.image_url }}
+                                <div class="field">
+                                    <div class="control has-icons-left">
+                                        {{ form.image_url }}
+                                        <span class="icon is-small is-left"><i class="fa fa-link"></i></span>
+                                    </div>
                                 </div>
                             </div>
-
-                            <p class="help has-text-grey-light mt-2" style="font-size: 0.75rem;">Set the primary image
-                                for
-                                this post.</p>
                         </div>
+                    </div>
+
+                    <!-- Meta / Delete -->
+                    <div class="has-text-centered mt-4">
+                        <a href="{% url 'my_posts' %}" class="has-text-grey is-size-7 hover-danger"
+                            onclick="return confirm('Discard changes?');">
+                            Discared & Move to Trash
+                        </a>
                     </div>
 
                 </div>
             </div>
 
         </div>
-    </form>
-</div>
+    </div>
+
+    <!-- Hidden status field if needed, logic handled by button value -->
+    <div style="display:none;">{{ form.status }}</div>
+</form>
 
 <script>
+    // Tab Logic
     function switchImageTab(tabName) {
-        document.getElementById('tab-upload').classList.remove('is-active');
-        document.getElementById('tab-url').classList.remove('is-active');
+        document.querySelectorAll('.tabs li').forEach(el => el.classList.remove('is-active'));
         document.getElementById('tab-' + tabName).classList.add('is-active');
 
-        const uploadField = document.getElementById('image-input-upload');
-        const urlField = document.getElementById('image-input-url');
-
         if (tabName === 'upload') {
-            uploadField.classList.remove('is-hidden');
-            urlField.classList.add('is-hidden');
+            document.getElementById('image-input-upload').classList.remove('is-hidden');
+            document.getElementById('image-input-url').classList.add('is-hidden');
         } else {
-            uploadField.classList.add('is-hidden');
-            urlField.classList.remove('is-hidden');
+            document.getElementById('image-input-upload').classList.add('is-hidden');
+            document.getElementById('image-input-url').classList.remove('is-hidden');
         }
     }
 
-    // Live SEO Preview Update
+    // SEO Live Preview
     function updateSEO() {
-        // Title
-        let titleInput = document.querySelector('input[name="title"]');
-        let title = titleInput ? titleInput.value : "";
-        if (!title) title = "Article Title Example";
-        document.getElementById('seo-preview-title').innerText = title;
-
-        // Slug/URL
-        let slugInput = document.querySelector('input[name="slug"]');
-        let slug = slugInput ? slugInput.value : "";
-        if (!slug && title !== "Article Title Example") {
-            slug = title.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '');
-        }
-        if (!slug) slug = "article-slug";
+        const title = document.querySelector('input[name="title"]').value || 'Article Title Example';
         const hostname = window.location.hostname;
-        document.getElementById('seo-preview-url').innerText = "https://" + hostname + "/" + slug + "/";
+        let slug = document.querySelector('input[name="slug"]').value;
 
-        // Desc
-        let introInput = document.querySelector('textarea[name="intro"]');
-        let intro = introInput ? introInput.value : "";
-        if (!intro) intro = "Please enter an introduction to see how it looks in search results...";
-        // Truncate if too long (simulated)
-        if (intro.length > 160) {
-            intro = intro.substring(0, 157) + "...";
+        // Auto-generate slug preview from title if empty
+        if (!slug && title !== 'Article Title Example') {
+            slug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
         }
-        document.getElementById('seo-preview-desc').innerText = intro;
+
+        const intro = document.querySelector('textarea[name="intro"]').value || 'Enter a description to see the preview here...';
+
+        document.getElementById('seo-preview-title').innerText = title;
+        document.getElementById('seo-preview-url').innerText = `https://${hostname}/${slug || 'post-url'}/`;
+        document.getElementById('seo-preview-desc').innerText = intro.substring(0, 160) + (intro.length > 160 ? '...' : '');
     }
 
-    // Apply specific classes to generic form widgets to match the design
     document.addEventListener('DOMContentLoaded', () => {
-        // Find the title input (it has class 'input')
-        const titleInputs = document.querySelectorAll('input[name="title"]');
-        titleInputs.forEach(input => {
-            input.classList.remove('input', 'is-medium', 'is-small'); // Remove Bulma defaults
-            input.classList.add('title-input'); // Add our custom WP style
-            input.placeholder = "Add title";
-            input.addEventListener('input', updateSEO);
-        });
+        // Init Classes
+        const titleInput = document.querySelector('input[name="title"]');
+        if (titleInput) {
+            titleInput.classList.add('input-title');
+            titleInput.placeholder = "Enter your headline...";
+            titleInput.addEventListener('input', updateSEO);
+        }
 
-        // Intro (textarea)
-        const introInputs = document.querySelectorAll('textarea[name="intro"]');
-        introInputs.forEach(input => {
-            input.classList.remove('textarea');
-            input.classList.add('intro-input');
-            input.rows = 2; // Make it smaller initially
-            input.placeholder = "Write a short excerpt...";
-
+        const introInput = document.querySelector('textarea[name="intro"]');
+        if (introInput) {
+            introInput.classList.add('input-excerpt');
+            introInput.placeholder = "Write a short, catchy excerpt or introduction...";
+            introInput.addEventListener('input', updateSEO);
             // Auto-resize
-            input.addEventListener('input', function () {
+            introInput.addEventListener('input', function () {
                 this.style.height = 'auto';
                 this.style.height = (this.scrollHeight) + 'px';
             });
-        });
-
-        // Add Listeners for SEO (consolidated)
-        const inputs = [
-            document.querySelector('input[name="title"]'),
-            document.querySelector('input[name="slug"]'),
-            document.querySelector('textarea[name="intro"]'),
-            document.querySelector('select[name="category"]')
-        ];
-        inputs.forEach(el => {
-            if (el) {
-                el.addEventListener('input', updateSEO);
-                el.addEventListener('change', updateSEO);
-            }
-        });
-
-        // Slug input
-        const slugInputs = document.querySelectorAll('input[name="slug"]');
-        slugInputs.forEach(input => {
-            input.classList.add('input', 'is-small');
-            input.addEventListener('input', updateSEO);
-        });
-
-        // Initialize SEO Preview
-        updateSEO();
-
-        // Image URL input
-        const urlInput = document.querySelector('input[name="image_url"]');
-        if (urlInput) {
-            urlInput.classList.add('input', 'is-small');
-            urlInput.placeholder = "https://...";
         }
 
+        const slugInput = document.querySelector('input[name="slug"]');
+        if (slugInput) {
+            slugInput.classList.add('input', 'is-small');
+            slugInput.addEventListener('input', updateSEO);
+        }
+
+        const imgUrlInput = document.querySelector('input[name="image_url"]');
+        if (imgUrlInput) {
+            imgUrlInput.classList.add('input', 'is-small');
+            imgUrlInput.placeholder = "https://example.com/image.jpg";
+        }
+
+        // Init SEO
+        updateSEO();
     });
 </script>
 {% endblock %}

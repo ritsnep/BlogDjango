@@ -21,10 +21,12 @@ class Category(models.Model):
 class Post(models.Model):
     ACTIVE = 'active'
     DRAFT = 'draft'
+    TRASH = 'trash'
     
     STATUS_CHOICES = (
         (ACTIVE, 'Active'),
-        (DRAFT, 'Draft')
+        (DRAFT, 'Draft'),
+        (TRASH, 'Trash')
     )
 
     category = models.ForeignKey(Category, related_name='posts', on_delete=models.CASCADE)

@@ -1,74 +1,331 @@
 {% extends 'core/base.html' %}
 
-{% block title %}My Dashboard | {% endblock %}
+{% block title %}Dashboard | {% endblock %}
 
 {% block content %}
-<div class="container section">
-    <div class="level">
+<style>
+    /* Dashboard Premium Theme */
+    :root {
+        --primary-color: #2563eb;
+        --bg-color: #f8fafc;
+        --border-color: #e2e8f0;
+        --text-color: #1e293b;
+        --text-light: #64748b;
+    }
+
+    body {
+        background-color: var(--bg-color);
+        font-family: 'Inter', system-ui, sans-serif;
+    }
+
+    /* Cards */
+    .dash-card {
+        background: white;
+        border-radius: 12px;
+        border: 1px solid var(--border-color);
+        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        overflow: hidden;
+        margin-bottom: 2rem;
+    }
+
+    .dash-header {
+        padding: 1.5rem;
+        border-bottom: 1px solid var(--border-color);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: #fff;
+    }
+
+    .dash-title {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--text-color);
+    }
+
+    /* Stats/Profile Section */
+    .profile-section {
+        background: white;
+    }
+
+    /* Clean Tables */
+    .table-container {
+        padding: 0;
+    }
+
+    .table.is-modern {
+        margin-bottom: 0;
+        background: transparent;
+    }
+
+    .table.is-modern th {
+        border-bottom: 1px solid var(--border-color) !important;
+        color: var(--text-light);
+        font-weight: 600;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        padding: 1rem 1.5rem;
+    }
+
+    .table.is-modern td {
+        border-bottom: 1px solid var(--border-color);
+        padding: 1.25rem 1.5rem;
+        vertical-align: middle;
+        font-size: 0.95rem;
+        color: var(--text-color);
+    }
+
+    .table.is-modern tr:last-child td {
+        border-bottom: none;
+    }
+
+    .table.is-modern tr:hover {
+        background-color: #f8fafc;
+    }
+
+    /* Tabs */
+    .modern-tabs {
+        border-bottom: 1px solid var(--border-color);
+        padding: 0 1.5rem;
+        display: flex;
+        gap: 2rem;
+    }
+
+    .tab-item {
+        padding: 1rem 0;
+        color: var(--text-light);
+        font-weight: 500;
+        cursor: pointer;
+        position: relative;
+        transition: color 0.2s;
+    }
+
+    .tab-item:hover {
+        color: var(--primary-color);
+    }
+
+    .tab-item.is-active {
+        color: var(--primary-color);
+        font-weight: 600;
+    }
+
+    .tab-item.is-active::after {
+        content: '';
+        position: absolute;
+        bottom: -1px;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: var(--primary-color);
+    }
+
+    /* Actions */
+    .icon-btn {
+        width: 32px;
+        height: 32px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 6px;
+        color: var(--text-light);
+        transition: all 0.2s;
+    }
+
+    .icon-btn:hover {
+        background: #e2e8f0;
+        color: var(--text-color);
+    }
+
+    .icon-btn.is-danger:hover {
+        background: #fee2e2;
+        color: #ef4444;
+    }
+
+    .icon-btn.is-success:hover {
+        background: #d1fae5;
+        color: #047857;
+    }
+</style>
+
+<div class="container is-max-widescreen section" style="padding-top: 3rem;">
+
+    <!-- Top Header -->
+    <div class="level mb-6">
         <div class="level-left">
-            <h1 class="title is-3" style="font-family: 'Montserrat', sans-serif; font-weight: 700;">My Dashboard</h1>
+            <div>
+                <h1 class="title is-3 is-marginless" style="font-family: 'Montserrat', sans-serif;">Dashboard</h1>
+                <p class="subtitle is-6 has-text-grey mt-1">Welcome back, {{ user.first_name|default:user.username }}
+                </p>
+            </div>
         </div>
         <div class="level-right">
-            <a href="{% url 'create_post' %}" class="button is-primary is-medium">
-                <span class="icon"><i class="fa fa-pencil"></i></span>
-                <span>Write New Article</span>
+            <a href="{% url 'create_post' %}" class="button is-primary is-rounded has-shadow">
+                <span class="icon is-small"><i class="fa fa-plus"></i></span>
+                <span class="has-text-weight-bold">New Post</span>
             </a>
         </div>
     </div>
 
-    <div class="box" style="margin-top: 2rem;">
-        <div class="tabs is-boxed is-medium mb-0">
-            <ul>
-                <li class="is-active" id="tab-active" onclick="openTab('active')">
-                    <a>
-                        <span class="icon is-small has-text-success"><i class="fa fa-check-circle"
-                                aria-hidden="true"></i></span>
-                        <span>Published ({{ active_posts.count }})</span>
-                    </a>
-                </li>
-                <li id="tab-draft" onclick="openTab('draft')">
-                    <a>
-                        <span class="icon is-small has-text-grey"><i class="fa fa-file-text-o"
-                                aria-hidden="true"></i></span>
-                        <span>Drafts ({{ draft_posts.count }})</span>
-                    </a>
-                </li>
-            </ul>
+    <!-- PROFILE SECTION (Collapsible) -->
+    <div class="dash-card profile-section mb-6">
+        <div class="dash-header" style="cursor: pointer;"
+            onclick="document.getElementById('profile-content').classList.toggle('is-hidden');">
+            <div class="level is-mobile" style="width: 100%;">
+                <div class="level-left">
+                    <span class="icon is-medium mr-3 has-text-info"><i class="fa fa-user-circle fa-lg"></i></span>
+                    <div>
+                        <h2 class="dash-title">My Profile</h2>
+                        <p class="is-size-7 has-text-grey">Update your personal details and bio</p>
+                    </div>
+                </div>
+                <div class="level-right">
+                    <span class="icon has-text-grey-light"><i class="fa fa-chevron-down"></i></span>
+                </div>
+            </div>
         </div>
 
-        <div
-            style="background: #fff; padding: 2rem; border: 1px solid #dbdbdb; border-top: none; border-radius: 0 0 6px 6px;">
-            <!-- Active Posts Table -->
+        <div id="profile-content" class="is-hidden" style="border-top: 1px solid var(--border-color);">
+            <div class="p-5">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <input type="hidden" name="update_profile" value="1">
+
+                    <div class="columns is-variable is-8">
+                        <div class="column is-6" style="border-right: 1px solid var(--border-color);">
+                            <h4 class="title is-6 mb-4">Account Information</h4>
+                            <div class="field">
+                                <label class="label is-small has-text-grey">First Name</label>
+                                <div class="control">
+                                    <input class="input" type="text" name="first_name" value="{{ user.first_name }}">
+                                </div>
+                            </div>
+                            <div class="field">
+                                <label class="label is-small has-text-grey">Last Name</label>
+                                <div class="control">
+                                    <input class="input" type="text" name="last_name" value="{{ user.last_name }}">
+                                </div>
+                            </div>
+                            <div class="field">
+                                <label class="label is-small has-text-grey">Email Address</label>
+                                <div class="control has-icons-left">
+                                    <input class="input" type="email" name="email_user" value="{{ user.email }}">
+                                    <span class="icon is-small is-left"><i class="fa fa-envelope"></i></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="column is-6">
+                            <h4 class="title is-6 mb-4">Author Profile</h4>
+                            <div class="field">
+                                <label class="label is-small has-text-grey">Bio</label>
+                                <div class="control">
+                                    {{ profile_form.bio }}
+                                </div>
+                            </div>
+                            <div class="field">
+                                <label class="label is-small has-text-grey">Profile Image</label>
+                                <div class="file has-name is-fullwidth">
+                                    <label class="file-label">
+                                        {{ profile_form.profile_image }}
+                                        <span class="file-cta">
+                                            <span class="file-icon"><i class="fa fa-upload"></i></span>
+                                            <span class="file-label">Choose file…</span>
+                                        </span>
+                                        {% if user.userprofile.profile_image %}
+                                        <span class="file-name">{{ user.userprofile.profile_image.name|truncatechars:20
+                                            }}</span>
+                                        {% endif %}
+                                    </label>
+                                </div>
+                            </div>
+                            <label class="label is-small has-text-grey mt-3">Social Profiles</label>
+                            <div class="field">
+                                <div class="control has-icons-left">
+                                    {{ profile_form.website_url }}
+                                    <span class="icon is-small is-left"><i class="fa fa-globe"></i></span>
+                                </div>
+                            </div>
+                            <div class="field">
+                                <div class="control has-icons-left">
+                                    {{ profile_form.twitter_url }}
+                                    <span class="icon is-small is-left"><i class="fa fa-twitter"></i></span>
+                                </div>
+                            </div>
+                            <div class="field">
+                                <div class="control has-icons-left">
+                                    {{ profile_form.linkedin_url }}
+                                    <span class="icon is-small is-left"><i class="fa fa-linkedin"></i></span>
+                                </div>
+                            </div>
+                            <div class="control">
+                                <button class="button is-primary is-fullwidth mt-4">Save Changes</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- POSTS MANAGEMENT -->
+    <div class="dash-card">
+        <!-- Tabs -->
+        <div class="modern-tabs">
+            <div class="tab-item is-active" id="tab-active" onclick="openTab('active')">
+                <span class="icon mr-1"><i class="fa fa-check-circle has-text-success"></i></span>
+                Published ({{ active_posts.count }})
+            </div>
+            <div class="tab-item" id="tab-draft" onclick="openTab('draft')">
+                <span class="icon mr-1"><i class="fa fa-file-text-o"></i></span> Drafts ({{ draft_posts.count }})
+            </div>
+            <div class="tab-item" id="tab-trash" onclick="openTab('trash')">
+                <span class="icon mr-1"><i class="fa fa-trash has-text-danger"></i></span>
+                Trash ({{ trash_posts.count }})
+            </div>
+            <div class="tab-item" id="tab-comments" onclick="openTab('comments')">
+                <span class="icon mr-1"><i class="fa fa-comments has-text-info"></i></span>
+                Comments ({{ comments.count }})
+            </div>
+        </div>
+
+        <!-- Content Area -->
+        <div class="p-0">
+            <!-- Active Posts -->
             <div id="content-active" class="content-tab">
                 {% if active_posts %}
                 <div class="table-container">
-                    <table class="table is-fullwidth is-hoverable is-striped">
+                    <table class="table is-fullwidth is-modern">
                         <thead>
                             <tr>
-                                <th>Title</th>
+                                <th style="width: 45%;">Article</th>
                                 <th>Category</th>
                                 <th>Published</th>
-                                <th>Actions</th>
+                                <th class="has-text-right">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for post in active_posts %}
                             <tr>
                                 <td>
-                                    <a href="{% url 'post_detail' post.category.slug post.slug %}"
-                                        class="has-text-weight-bold has-text-dark">
-                                        {{ post.title }}
-                                    </a>
-                                </td>
-                                <td><span class="tag is-light is-info">{{ post.category.title }}</span></td>
-                                <td>{{ post.created_at|date:"M d, Y" }}</td>
-                                <td>
-                                    <div class="buttons are-small">
+                                    <h4 class="has-text-weight-bold mb-1">
                                         <a href="{% url 'post_detail' post.category.slug post.slug %}"
-                                            class="button is-light" title="View">
-                                            <i class="fa fa-eye"></i> View
-                                        </a>
-                                    </div>
+                                            class="has-text-dark">{{ post.title }}</a>
+                                    </h4>
+                                    <p class="is-size-7 has-text-grey">{{ post.intro|truncatechars:60 }}</p>
+                                </td>
+                                <td>
+                                    <span class="tag is-light is-info is-rounded">{{ post.category.title }}</span>
+                                </td>
+                                <td>
+                                    <span class="is-size-7 has-text-grey">{{ post.created_at|date:"M d, Y" }}</span>
+                                </td>
+                                <td class="has-text-right">
+                                    <a href="{% url 'post_detail' post.category.slug post.slug %}" class="icon-btn"
+                                        title="View"><i class="fa fa-eye"></i></a>
+                                    <a href="{% url 'move_to_trash' post.slug %}" class="icon-btn is-danger"
+                                        onclick="return confirm('Move to Trash?')" title="Trash"><i
+                                            class="fa fa-trash"></i></a>
                                 </td>
                             </tr>
                             {% endfor %}
@@ -76,38 +333,35 @@
                     </table>
                 </div>
                 {% else %}
-                <div class="notification is-light has-text-centered p-6">
-                    <p class="subtitle">You haven't published any articles yet.</p>
-                    <a href="{% url 'create_post' %}" class="button is-primary is-outlined">Write one now!</a>
+                <div class="has-text-centered p-6">
+                    <div class="icon is-large has-text-grey-lighter mb-3"><i class="fa fa-newspaper-o fa-3x"></i></div>
+                    <p class="subtitle is-6 has-text-grey">No published articles yet.</p>
                 </div>
                 {% endif %}
             </div>
 
-            <!-- Draft Posts Table -->
+            <!-- Draft Posts -->
             <div id="content-draft" class="content-tab is-hidden">
                 {% if draft_posts %}
                 <div class="table-container">
-                    <table class="table is-fullwidth is-hoverable">
+                    <table class="table is-fullwidth is-modern">
                         <thead>
                             <tr>
                                 <th>Title</th>
                                 <th>Category</th>
                                 <th>Created</th>
-                                <th>Actions</th>
+                                <th class="has-text-right">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for post in draft_posts %}
                             <tr>
-                                <td>
-                                    <span class="has-text-weight-semibold">{{ post.title }}</span>
-                                </td>
+                                <td><span class="has-text-weight-semibold">{{ post.title }}</span></td>
                                 <td><span class="tag is-light">{{ post.category.title }}</span></td>
                                 <td>{{ post.created_at|date:"M d, Y" }}</td>
-                                <td>
-                                    <!-- Placeholder for edit functionality -->
-                                    <button class="button is-small is-disabled"
-                                        title="Editing coming soon">Edit</button>
+                                <td class="has-text-right">
+                                    <a href="{% url 'move_to_trash' post.slug %}" class="icon-btn is-danger"
+                                        onclick="return confirm('Trash?')"><i class="fa fa-trash"></i></a>
                                 </td>
                             </tr>
                             {% endfor %}
@@ -115,25 +369,100 @@
                     </table>
                 </div>
                 {% else %}
-                <div class="notification is-light has-text-centered p-6">
-                    <p>No drafts found.</p>
+                <div class="has-text-centered p-6">
+                    <p class="has-text-grey">No drafts.</p>
                 </div>
                 {% endif %}
             </div>
+
+            <!-- Trash -->
+            <div id="content-trash" class="content-tab is-hidden">
+                {% if trash_posts %}
+                <div class="table-container">
+                    <table class="table is-fullwidth is-modern">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Deleted</th>
+                                <th class="has-text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for post in trash_posts %}
+                            <tr>
+                                <td class="has-text-grey-light">{{ post.title }}</td>
+                                <td>{{ post.updated_at|date:"M d, Y" }}</td>
+                                <td class="has-text-right">
+                                    <a href="{% url 'restore_post' post.slug %}" class="icon-btn is-success"
+                                        title="Restore"><i class="fa fa-undo"></i></a>
+                                    <a href="{% url 'delete_post_permanently' post.slug %}" class="icon-btn is-danger"
+                                        onclick="return confirm('Delete Permanently?')"><i class="fa fa-times"></i></a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="has-text-centered p-6">
+                    <p class="has-text-grey">Trash is empty.</p>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Comments -->
+            <div id="content-comments" class="content-tab is-hidden">
+                {% if comments %}
+                <div class="table-container">
+                    <table class="table is-fullwidth is-modern">
+                        <thead>
+                            <tr>
+                                <th>Author</th>
+                                <th style="width:40%;">Comment</th>
+                                <th>Date</th>
+                                <th class="has-text-right">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for comment in comments %}
+                            <tr>
+                                <td>
+                                    <strong>{{ comment.name }}</strong>
+                                    <br><span class="is-size-7 has-text-grey">{{ comment.email }}</span>
+                                </td>
+                                <td>
+                                    <p class="is-size-7 has-text-grey mb-1">On: <a
+                                            href="{% url 'post_detail' comment.post.category.slug comment.post.slug %}">{{
+                                            comment.post.title|truncatechars:20 }}</a></p>
+                                    {{ comment.body|truncatechars:80 }}
+                                </td>
+                                <td>{{ comment.created_at|date:"M d" }}</td>
+                                <td class="has-text-right">
+                                    <a href="{% url 'delete_comment' comment.id %}" class="icon-btn is-danger"
+                                        onclick="return confirm('Delete?')"><i class="fa fa-trash"></i></a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="has-text-centered p-6">
+                    <p class="has-text-grey">No comments found.</p>
+                </div>
+                {% endif %}
+            </div>
+
         </div>
     </div>
-
 </div>
 
 <script>
     function openTab(tabName) {
-        // Toggle Tabs
-        document.querySelectorAll('.tabs li').forEach(li => li.classList.remove('is-active'));
+        document.querySelectorAll('.tab-item').forEach(el => el.classList.remove('is-active'));
         document.getElementById('tab-' + tabName).classList.add('is-active');
 
-        // Toggle Content
-        document.getElementById('content-active').classList.add('is-hidden');
-        document.getElementById('content-draft').classList.add('is-hidden');
+        document.querySelectorAll('.content-tab').forEach(el => el.classList.add('is-hidden'));
         document.getElementById('content-' + tabName).classList.remove('is-hidden');
     }
 </script>

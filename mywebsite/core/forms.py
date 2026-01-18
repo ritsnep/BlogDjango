@@ -62,6 +62,17 @@ class UserProfileForm(forms.ModelForm):
             instance.save()
         return instance
 
+class PublicUserProfileForm(UserProfileForm):
+    class Meta:
+        model = UserProfile
+        exclude = ('user', 'role')
+        widgets = {
+            'bio': forms.Textarea(attrs={'class': 'textarea', 'rows': 3, 'placeholder': 'Short bio...'}),
+            'linkedin_url': forms.URLInput(attrs={'class': 'input', 'placeholder': 'LinkedIn URL'}),
+            'twitter_url': forms.URLInput(attrs={'class': 'input', 'placeholder': 'Twitter URL'}),
+            'website_url': forms.URLInput(attrs={'class': 'input', 'placeholder': 'Personal Website URL'}),
+        }
+
 class SignUpForm(UserCreationForm):
     first_name = forms.CharField(max_length=30, required=True)
     last_name = forms.CharField(max_length=30, required=True)

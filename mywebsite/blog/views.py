@@ -5,8 +5,10 @@ from django.contrib.auth.decorators import login_required
 from django.utils.text import slugify
 from django.core.paginator import Paginator
 from django.contrib.auth.models import User
-from .forms import CommentForm, PostForm
-from .models import Post,Category
+from .models import Post, Category, Comment
+from .forms import PostForm, CommentForm
+from core.models import UserProfile
+from core.forms import PublicUserProfileForm
 
 @login_required
 def create_post(request):
@@ -15,6 +17,13 @@ def create_post(request):
         if form.is_valid():
             post = form.save(commit=False)
             post.author = request.user
+
+            # Handle Draft/Publish Actions
+            action = request.POST.get('action')
+            if action == 'draft':
+                post.status = Post.DRAFT
+            else:
+                post.status = Post.ACTIVE
             
             # Use provided slug or generate from title
             if form.cleaned_data.get('slug'):
@@ -155,8 +164,57 @@ def my_posts(request):
     posts = Post.objects.filter(author=request.user).order_by('-created_at')
     active_posts = posts.filter(status=Post.ACTIVE)
     draft_posts = posts.filter(status=Post.DRAFT)
+    trash_posts = posts.filter(status=Post.TRASH)
     
+    comments = Comment.objects.filter(post__author=request.user).order_by('-created_at')
+    
+    # Profile Logic
+    user_profile, created = UserProfile.objects.get_or_create(user=request.user)
+    
+    if request.method == 'POST' and 'update_profile' in request.POST:
+        profile_form = PublicUserProfileForm(request.POST, request.FILES, instance=user_profile)
+        user = request.user
+        user.first_name = request.POST.get('first_name', user.first_name)
+        user.last_name = request.POST.get('last_name', user.last_name)
+        user.email = request.POST.get('email_user', user.email)
+        user.save()
+        
+        if profile_form.is_valid():
+            profile_form.save()
+            return redirect('my_posts')
+    else:
+        profile_form = PublicUserProfileForm(instance=user_profile)
+
     return render(request, 'blog/my_posts.html', {
-        'active_posts': active_posts, 
-        'draft_posts': draft_posts
+        'active_posts': active_posts,
+        'draft_posts': draft_posts,
+        'trash_posts': trash_posts,
+        'comments': comments,
+        'profile_form': profile_form
     })
+
+@login_required
+def move_to_trash(request, slug):
+    post = get_object_or_404(Post, slug=slug, author=request.user)
+    post.status = Post.TRASH
+    post.save()
+    return redirect('my_posts')
+
+@login_required
+def restore_post(request, slug):
+    post = get_object_or_404(Post, slug=slug, author=request.user)
+    post.status = Post.DRAFT
+    post.save()
+    return redirect('my_posts')
+
+@login_required
+def delete_post_permanently(request, slug):
+    post = get_object_or_404(Post, slug=slug, author=request.user)
+    post.delete()
+    return redirect('my_posts')
+
+@login_required
+def delete_comment(request, pk):
+    comment = get_object_or_404(Comment, pk=pk, post__author=request.user)
+    comment.delete()
+    return redirect('my_posts')

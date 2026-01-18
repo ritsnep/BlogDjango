@@ -15,7 +15,7 @@ class UserProfile(models.Model):
     role = models.CharField(max_length=50, choices=ROLE_CHOICES, default='Writer')
     bio = models.TextField(blank=True, null=True, help_text="Bio for author page and post footer")
     profile_image = models.ImageField(upload_to='uploads/authors/', blank=True, null=True)
-    email = models.EmailField(blank=True, null=True)
+    # email field removed to avoid duplication with User.email
     linkedin_url = models.URLField(blank=True, null=True)
     twitter_url = models.URLField(blank=True, null=True)
     website_url = models.URLField(blank=True, null=True)
@@ -33,5 +33,5 @@ class UserProfile(models.Model):
         return "https://ui-avatars.com/api/?name=" + self.user.username + "&background=random"
 
     def get_contact_email(self):
-        # Returns profile email or falls back to user email
-        return self.email or getattr(self.user, 'email', '')
+        # Returns user email
+        return getattr(self.user, 'email', '')
