@@ -13,10 +13,11 @@ class PostForm(forms.ModelForm):
 
     class Meta:
         model = Post
-        fields = ('category', 'title', 'slug', 'intro', 'body', 'image', 'status')
+        fields = ('category', 'title', 'slug', 'intro', 'body', 'image', 'tags', 'status')
         widgets = {
             'intro': forms.Textarea(attrs={'class': 'textarea', 'rows': 3, 'placeholder': 'A short summary of your article...'}),
             'title': forms.TextInput(attrs={'class': 'input is-medium', 'placeholder': 'Article Title'}),
+            'tags': forms.CheckboxSelectMultiple(),
         }
 
     def clean(self):
@@ -52,5 +53,5 @@ class PostForm(forms.ModelForm):
         
         if commit:
             instance.save()
+            self.save_m2m()  # Save many-to-many relationships (tags)
         return instance
-        

@@ -323,6 +323,8 @@
                                 <td class="has-text-right">
                                     <a href="{% url 'post_detail' post.category.slug post.slug %}" class="icon-btn"
                                         title="View"><i class="fa fa-eye"></i></a>
+                                    <a href="{% url 'edit_post' post.slug %}" class="icon-btn" title="Edit"><i
+                                            class="fa fa-pencil"></i></a>
                                     <a href="{% url 'move_to_trash' post.slug %}" class="icon-btn is-danger"
                                         onclick="return confirm('Move to Trash?')" title="Trash"><i
                                             class="fa fa-trash"></i></a>
@@ -360,6 +362,8 @@
                                 <td><span class="tag is-light">{{ post.category.title }}</span></td>
                                 <td>{{ post.created_at|date:"M d, Y" }}</td>
                                 <td class="has-text-right">
+                                    <a href="{% url 'edit_post' post.slug %}" class="icon-btn" title="Edit"><i
+                                            class="fa fa-pencil"></i></a>
                                     <a href="{% url 'move_to_trash' post.slug %}" class="icon-btn is-danger"
                                         onclick="return confirm('Trash?')"><i class="fa fa-trash"></i></a>
                                 </td>

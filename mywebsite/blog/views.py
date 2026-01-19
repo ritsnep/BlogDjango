@@ -40,11 +40,73 @@ def create_post(request):
             
             post.save()
             form.save() # Handles m2m and image_url logic from Form.save() method
+            
+            # Process new tags (create any that don't exist)
+            process_new_tags(request, post)
+            
             return redirect('post_detail', category_slug=post.category.slug, slug=post.slug)
     else:
         form = PostForm()
     
-    return render(request, 'blog/create_post.html', {'form': form})
+    return render(request, 'blog/create_post.html', {'form': form, 'is_edit': False})
+
+def process_new_tags(request, post):
+    """Process and create new tags from the form submission"""
+    from .models import Tag
+    
+    # Get all selected tag values
+    tag_values = request.POST.getlist('tags')
+    tag_objects = []
+    
+    for tag_value in tag_values:
+        # Try to get existing tag by slug
+        try:
+            tag = Tag.objects.get(slug=tag_value)
+            tag_objects.append(tag)
+        except Tag.DoesNotExist:
+            # This is a new tag - create it
+            # The tag_value is the slug, we need to get the name from data attribute
+            # For new tags, the slug is generated from the name
+            # We'll use the slug to create a readable name
+            tag_name = tag_value.replace('-', ' ').title()
+            tag = Tag.objects.create(name=tag_name, slug=tag_value)
+            tag_objects.append(tag)
+    
+    # Set the tags for the post
+    post.tags.set(tag_objects)
+
+@login_required
+def edit_post(request, slug):
+    post = get_object_or_404(Post, slug=slug, author=request.user)
+    
+    if request.method == 'POST':
+        form = PostForm(request.POST, request.FILES, instance=post)
+        if form.is_valid():
+            post = form.save(commit=False)
+            
+            # Update status if action button clicked
+            action = request.POST.get('action')
+            if action:
+                if action == 'draft':
+                    post.status = Post.DRAFT
+                elif action == 'publish':
+                    post.status = Post.ACTIVE
+            
+            post.save()
+            form.save()
+            
+            # Process new tags (create any that don't exist)
+            process_new_tags(request, post)
+            
+            return redirect('my_posts')
+    else:
+        form = PostForm(instance=post)
+    
+    return render(request, 'blog/create_post.html', {
+        'form': form,
+        'is_edit': True,
+        'post': post
+    })
 
 # View post detail and handle comments
 def detail(request, category_slug, slug):

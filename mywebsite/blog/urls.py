@@ -1,12 +1,14 @@
-
 from django.urls import path
 
-
 from . import views
+from .feeds import LatestPostsFeed, LatestPostsAtomFeed
 
 
 urlpatterns=[
+    path('feed/', LatestPostsFeed(), name='rss_feed'),
+    path('feed/atom/', LatestPostsAtomFeed(), name='atom_feed'),
     path('create-post/', views.create_post, name='create_post'),
+    path('post/<slug:slug>/edit/', views.edit_post, name='edit_post'),
     path('my-posts/', views.my_posts, name='my_posts'),
     path('my-posts/trash/<slug:slug>/', views.move_to_trash, name='move_to_trash'),
     path('my-posts/restore/<slug:slug>/', views.restore_post, name='restore_post'),

@@ -203,6 +203,44 @@
         background: #eff6ff;
     }
 
+    /* Tag Checkboxes */
+    .tags-checkbox-wrapper ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .tags-checkbox-wrapper li {
+        margin-bottom: 0.5rem;
+    }
+
+    .tags-checkbox-wrapper label {
+        display: flex;
+        align-items: center;
+        padding: 0.5rem;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background 0.2s;
+        font-size: 0.9rem;
+        color: var(--text-main);
+    }
+
+    .tags-checkbox-wrapper label:hover {
+        background: #f8fafc;
+    }
+
+    .tags-checkbox-wrapper input[type="checkbox"] {
+        margin-right: 0.5rem;
+        cursor: pointer;
+    }
+
+    .tags-checkbox-wrapper input[type="checkbox"]:checked+label,
+    .tags-checkbox-wrapper label:has(input[type="checkbox"]:checked) {
+        background: #eff6ff;
+        color: var(--primary-color);
+        font-weight: 600;
+    }
+
     /* Mobile Responsiveness */
     @media (max-width: 768px) {
         .editor-toolbar {
@@ -266,7 +304,7 @@
                 <span>Save Draft</span>
             </button>
             <button type="submit" name="action" value="publish" class="button btn-publish btn-action">
-                <span>Publish Now</span>
+                <span>{% if is_edit and post.status == 'active' %}Update Post{% else %}Publish Now{% endif %}</span>
                 <span class="icon is-small ml-1"><i class="fa fa-paper-plane"></i></span>
             </button>
         </div>
@@ -379,6 +417,39 @@
                         </div>
                     </div>
 
+                    <!-- Tags Card -->
+                    <div class="sidebar-card">
+                        <div class="sidebar-header">
+                            Tags
+                        </div>
+                        <div class="sidebar-body">
+                            <!-- Add New Tag Input -->
+                            <div class="field has-addons mb-3">
+                                <div class="control is-expanded">
+                                    <input type="text" id="new-tag-input" class="input is-small"
+                                        placeholder="Add new tag (e.g., SEO, PPC)">
+                                </div>
+                                <div class="control">
+                                    <button type="button" class="button is-small is-primary" onclick="addNewTag()">
+                                        <span class="icon is-small"><i class="fa fa-plus"></i></span>
+                                        <span>Add</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Existing Tags Selection -->
+                            <div class="field">
+                                <label class="label is-small has-text-grey mb-2">Select Existing Tags</label>
+                                <div class="tags-checkbox-wrapper" style="max-height: 200px; overflow-y: auto;">
+                                    {{ form.tags }}
+                                </div>
+                                <p class="help is-size-7 has-text-grey mt-2">
+                                    <i class="fa fa-info-circle"></i> Select relevant tags or create new ones above
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Featured Image Card -->
                     <div class="sidebar-card">
                         <div class="sidebar-header">
@@ -447,6 +518,83 @@
             document.getElementById('image-input-url').classList.remove('is-hidden');
         }
     }
+
+    // Add New Tag Function
+    function addNewTag() {
+        const input = document.getElementById('new-tag-input');
+        const tagName = input.value.trim();
+
+        if (!tagName) {
+            alert('Please enter a tag name');
+            return;
+        }
+
+        // Generate slug from tag name
+        const slug = tagName.toLowerCase()
+            .replace(/[^a-z0-9]+/g, '-')
+            .replace(/(^-|-$)/g, '');
+
+        // Check if tag already exists in the list
+        const existingLabels = document.querySelectorAll('.tags-checkbox-wrapper label');
+        for (let label of existingLabels) {
+            if (label.textContent.trim().toLowerCase() === tagName.toLowerCase()) {
+                alert('This tag already exists. Please select it from the list below.');
+                input.value = '';
+                return;
+            }
+        }
+
+        // Create new checkbox element
+        const wrapper = document.querySelector('.tags-checkbox-wrapper ul');
+        if (!wrapper) {
+            // If no ul exists yet, create one
+            const newUl = document.createElement('ul');
+            newUl.id = 'id_tags';
+            document.querySelector('.tags-checkbox-wrapper').appendChild(newUl);
+        }
+
+        const ul = document.querySelector('.tags-checkbox-wrapper ul');
+        const li = document.createElement('li');
+
+        // Create unique ID for the checkbox
+        const checkboxId = `id_tags_new_${Date.now()}`;
+
+        li.innerHTML = `
+            <label for="${checkboxId}">
+                <input type="checkbox" name="tags" value="${slug}" id="${checkboxId}" checked data-new-tag="${tagName}">
+                ${tagName} <span style="color: #3273dc; font-size: 0.75rem;">(New)</span>
+            </label>
+        `;
+
+        ul.appendChild(li);
+
+        // Clear input
+        input.value = '';
+
+        // Show success message
+        const helpText = document.querySelector('.tags-checkbox-wrapper + .help');
+        const originalText = helpText.innerHTML;
+        helpText.innerHTML = '<i class="fa fa-check-circle"></i> <strong style="color: #48c774;">Tag added!</strong> It will be created when you save the post.';
+        helpText.style.color = '#48c774';
+
+        setTimeout(() => {
+            helpText.innerHTML = originalText;
+            helpText.style.color = '';
+        }, 3000);
+    }
+
+    // Allow Enter key to add tag
+    document.addEventListener('DOMContentLoaded', () => {
+        const tagInput = document.getElementById('new-tag-input');
+        if (tagInput) {
+            tagInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    addNewTag();
+                }
+            });
+        }
+    });
 
     // SEO Live Preview
     function updateSEO() {

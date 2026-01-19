@@ -17,6 +17,20 @@ class Category(models.Model):
     def get_absolute_url(self):
         return '/%s/' % self.slug
 
+# Tags for blog posts
+class Tag(models.Model):
+    name = models.CharField(max_length=50, unique=True)
+    slug = models.SlugField(unique=True)
+    
+    class Meta:
+        ordering = ('name',)
+    
+    def __str__(self):
+        return self.name
+    
+    def get_absolute_url(self):
+        return '/tag/%s/' % self.slug
+
 # Blog post model
 class Post(models.Model):
     ACTIVE = 'active'
@@ -39,6 +53,7 @@ class Post(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default=ACTIVE)
     image = models.ImageField(upload_to='uploads/', blank=True, null=True)
+    tags = models.ManyToManyField(Tag, related_name='posts', blank=True)
     
     class Meta:
         ordering = ('-created_at',)

@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django import forms
 
-from .models import Post,Category,Comment
+from .models import Post, Category, Comment, Tag
 
 class CommentItemInline(admin.TabularInline):
     model = Comment
@@ -44,7 +44,7 @@ class PostAdmin(admin.ModelAdmin):
             'fields': ('category', 'author', 'title', 'slug', 'status')
         }),
         ('Content', {
-            'fields': ('intro', 'body', 'image', 'image_url')
+            'fields': ('intro', 'body', 'image', 'image_url', 'tags')
         }),
         ('Dates', {
             'fields': ('created_at',),
@@ -63,6 +63,13 @@ class CategoryAdmin(admin.ModelAdmin):
 
 class CommentAdmin(admin.ModelAdmin):
     list_display=['name','post','created_at']
+
+class TagAdmin(admin.ModelAdmin):
+    search_fields = ['name']
+    list_display = ['name', 'slug']
+    prepopulated_fields = {'slug': ('name',)}
+
 admin.site.register(Post,PostAdmin)
 admin.site.register(Category,CategoryAdmin)
 admin.site.register(Comment,CommentAdmin)
+admin.site.register(Tag, TagAdmin)
