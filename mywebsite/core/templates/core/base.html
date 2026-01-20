@@ -479,26 +479,34 @@
             .navbar-item .buttons {
                 display: flex;
                 flex-direction: column;
+                gap: 0.6rem;
                 width: 100%;
                 margin: 0 !important;
-                /* Prevent Bulma negative margin overflow */
+            }
+
+            .navbar-item .buttons .button,
+            .navbar-item .buttons form {
+                width: 100% !important;
+                margin: 0 !important;
+                display: flex !important;
+            }
+
+            .navbar-item .buttons form .button {
+                width: 100% !important;
             }
 
             .navbar-item .buttons .button {
-                width: 100%;
-                margin-bottom: 0.5rem;
-                margin-right: 0 !important;
-                display: flex;
                 justify-content: center;
-                box-sizing: border-box;
-                /* Ensure padding doesn't add to width */
+                align-items: center;
+                text-align: center;
+                padding: 0.6rem 1rem;
+                height: 2.5rem;
+                font-size: 0.9rem !important;
+                font-weight: 600;
+                border-radius: 4px;
             }
 
-            .navbar-item .buttons .button:last-child {
-                margin-bottom: 0;
-            }
-
-            /* Hide search toggle on mobile */
+            /* Mobile/Tablet Toggles */
             .search-overlay,
             .search-toggle-btn {
                 display: none !important;
@@ -575,8 +583,8 @@
             display: inline;
         }
 
-        /* Show short text on intermediate desktop screens where overflow happens */
-        @media (min-width: 1024px) and (max-width: 1350px) {
+        /* Show short text on all screens smaller than 1350px (including mobile) */
+        @media (max-width: 1350px) {
             .seo-text-long {
                 display: none;
             }
@@ -726,8 +734,8 @@
                     <!-- Newsletter Link -->
                     <a href="/" class="navbar-item">Newsletter</a>
 
-                    <!-- Search Toggle Wrapper -->
-                    <div class="navbar-item" style="padding: 0; margin-left: 2rem;">
+                    <!-- Search Toggle Wrapper (Hidden on mobile/tablet as they have their own search form) -->
+                    <div class="navbar-item is-hidden-touch" style="padding: 0; margin-left: 2rem;">
                         <button id="searchToggle" class="search-toggle-btn" title="Toggle Search">
                             <i class="fa fa-search"></i>
                             <i class="fa fa-caret-down" style="font-size: 0.7rem;"></i>
