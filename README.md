@@ -131,6 +131,92 @@ python manage.py runserver
 
 Visit `http://127.0.0.1:8000/` in your browser.
 
+## 🤖 n8n Automation (AI Draft Writer + Approval Publish)
+
+This project includes a minimal JSON API + an n8n Cloud automation setup to:
+
+- Generate AI-written blog drafts (Groq)
+- Fetch free stock feature images (Pexels)
+- Create the post in Django as `draft`
+- Publish a draft after you approve it in Google Sheets
+
+### Django API (for n8n)
+
+All API requests require:
+
+- Header: `X-API-Key: <API_SECRET_KEY>`
+
+Endpoints:
+
+- `GET /api/categories/`
+- `GET /api/tags/`
+- `POST /api/posts/` (create post; `status` = `draft` or `active`)
+- `POST|PATCH /api/posts/slug/<slug>/status/` (publish by slug; body: `{ "status": "active" }`)
+
+API settings (configure via environment variables):
+
+- `API_SECRET_KEY` (must match the header used by n8n)
+- `API_DEFAULT_AUTHOR_USERNAME` (default author for API-created posts)
+
+### ngrok (required for n8n Cloud -> local Django)
+
+n8n Cloud cannot access your localhost directly, so expose your Django server via ngrok:
+
+```bash
+ngrok http 8000
+```
+
+Use the forwarding URL as the base URL in n8n HTTP Request nodes:
+
+- `https://<something>.ngrok-free.dev`
+
+### Workflow A (AI -> Django Draft + Sheet Log)
+
+High-level flow:
+
+- Input a `topic`
+- Groq generates JSON: `title`, `intro`, `body_html`, `tags[]`, `category_slug`, `image_query`
+- Pexels returns an image URL (use `photos[0].src.large`)
+- Django draft created via `POST /api/posts/` with `status=draft`
+- Append a log row to Google Sheets
+
+Required API keys in n8n:
+
+- Groq: `Authorization: Bearer <GROQ_KEY>`
+- Pexels: `Authorization: <PEXELS_KEY>`
+- Django: `X-API-Key: <API_SECRET_KEY>`
+
+Category slugs are lowercase:
+
+- `bio`, `digital-marketing`, `ppc`, `seo`
+
+### Workflow B (Approve -> Publish)
+
+In your log sheet, add columns:
+
+- `approve` (set to `yes` to publish)
+- `published` (workflow sets to `yes`)
+
+Workflow B reads sheet rows and publishes only rows where:
+
+- `approve == yes`
+- `published` is empty / not `yes`
+- `slug` exists
+
+It publishes by calling:
+
+- `POST /api/posts/slug/<slug>/status/` with JSON body `{ "status": "active" }`
+
+Then it updates the same sheet row:
+
+- `published = yes`
+- `published_at = <timestamp>`
+- `published_url = <absolute_url>`
+
+### Notes for n8n Cloud
+
+Some n8n Cloud environments deny `$env` usage in expressions. If so, configure URLs/headers directly in nodes (no `$env`).
+
 ## 📁 Project Structure
 
 ```
