@@ -13,6 +13,8 @@ from django.contrib.auth import views as auth_views
 from .sitemaps import CategorySitemap, PostSitemap
 from core.views import frontpage, about, robot_txt, test_404, meet_the_team, sitemap_html, sitemap_xml, signup
 
+from blog import api as blog_api
+
 
 
 
@@ -33,6 +35,12 @@ urlpatterns = [
     path('team/', meet_the_team, name='meet_the_team'),
     path('test-404/', test_404, name='test_404'),  # Test URL for 404 page
     path('ckeditor5/', include('django_ckeditor_5.urls')),
+    # API endpoints
+    path('api/posts/', blog_api.create_post_api, name='api_create_post'),
+    path('api/posts/<int:post_id>/status/', blog_api.update_post_status_api, name='api_update_post_status'),
+    path('api/posts/slug/<slug:slug>/status/', blog_api.update_post_status_by_slug_api, name='api_update_post_status_by_slug'),
+    path('api/categories/', blog_api.list_categories_api, name='api_list_categories'),
+    path('api/tags/', blog_api.list_tags_api, name='api_list_tags'),
     path('', include('blog.urls')),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

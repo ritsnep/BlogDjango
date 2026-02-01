@@ -16,6 +16,8 @@ ALLOWED_HOSTS = [
     "localhost",
     "127.0.0.1",
     "sunil007.pythonanywhere.com",
+    ".ngrok-free.app",
+    ".ngrok-free.dev",
 ]
 
 # CSRF security
@@ -23,6 +25,8 @@ CSRF_TRUSTED_ORIGINS = [
     "http://localhost:8000",
     "http://127.0.0.1:8000",
     "https://sunil007.pythonanywhere.com",
+    "https://*.ngrok-free.app",
+    "https://*.ngrok-free.dev",
 ]
 
 # Apps
@@ -165,3 +169,5 @@ CKEDITOR_5_CONFIGS = {
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'frontpage'
 LOGOUT_REDIRECT_URL = 'frontpage'
+API_SECRET_KEY = os.environ.get("API_SECRET_KEY", "change-me")
+API_DEFAULT_AUTHOR_USERNAME = os.environ.get("API_DEFAULT_AUTHOR_USERNAME", "n8n ai writer")

@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django_ckeditor_5.fields import CKEditor5Field
+from django.utils.text import slugify
 
 # Categories for blog posts
 class Category(models.Model):
@@ -13,6 +14,13 @@ class Category(models.Model):
 
     def __str__(self):
         return self.title
+
+    def save(self, *args, **kwargs):
+        if self.slug:
+            self.slug = slugify(self.slug)
+        else:
+            self.slug = slugify(self.title)
+        super().save(*args, **kwargs)
 
     def get_absolute_url(self):
         return '/%s/' % self.slug
@@ -27,6 +35,13 @@ class Tag(models.Model):
     
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        if self.slug:
+            self.slug = slugify(self.slug)
+        else:
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
     
     def get_absolute_url(self):
         return '/tag/%s/' % self.slug
@@ -60,6 +75,13 @@ class Post(models.Model):
 
     def __str__(self):
         return self.title
+
+    def save(self, *args, **kwargs):
+        if self.slug:
+            self.slug = slugify(self.slug)
+        else:
+            self.slug = slugify(self.title)
+        super().save(*args, **kwargs)
     
     def get_absolute_url(self):
         return '/%s/%s/' % (self.category.slug, self.slug)
